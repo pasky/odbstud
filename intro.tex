@@ -1,0 +1,58 @@
+\chapter{Introduction}
+
+We consider the Question Answering problem --- a function of
+unstructured user query that returns the information queried for.
+This is a harder problem than a linked data graph search (which requires
+a precisely structured user query) or a generic search engine (which
+returns whole documents or sets of passages instead of the specific
+information).
+The Question Answering task is however a natural extension of a search
+engine, as currently employed e.g.\ in Google Search \cite{googleKG}
+or personal assistants like Apple Siri, and with the high
+profile IBM Watson Jeopardy! matches \cite{WatsonOverview}
+it has became a benchmark of progress in AI research.
+As we are interested in a general purpose QA system, we will consider
+an ``open domain'' general factoid question answering, rather than
+domain-specific applications, though we keep flexibility in this direction
+as one of our goals.
+
+Diverse QA system architectures have been proposed in the last 15 years,
+applying different approaches to information retrieval.  A full survey
+is beyong the scope of this paper, but let us outline at least the most
+basic choices we faced when designing our system.
+
+Perhaps the most popular approach in QA research has been restricting
+the task to querying structured knowledge bases, typically using the
+RDF paradigm and accessible via SPARQL\@.  The QA problem can
+be then rephrased as learning a function translating free-text user query
+to a structured lambda expression or SPARQL query. \cite{Semantic2013Berant} \cite{Semantic2014Bordes}
+We prefer to focus on unstructured datasets as the coverage of the system
+as well as domain versatility increases dramatically; building a combined
+portfolio of structured and unstructured knowledge bases
+is then again an obvious extension.
+
+When relying on unstructured knowledge bases, a common strategy is to offload
+the information retrieval on an external high-quality web search engine
+like Google or Bing (see e.g.\ the \textbf{Mulder} system \cite{MulderKwok}
+or many others).
+We make a point of relying purely on local information sources.
+While the task becomes noticeably harder,
+%as we index significantly less data and search results may not be that well sorted,
+we believe the result is a more
+universal system that could be readily refocused on a specific domain
+or proprietary knowledge base, and also a system more appropriate as
+a scientific platform as the results are fully reproducible over time.
+
+Finally, a common restriction of the QA problem concerns only selecting
+the most relevant answer-bearing passage, given a tuple of input question
+and set of pre-selected candidate passages \cite{WangQAGrammar}.
+This Answer Sentence Selection task is certainly
+worthwhile as a component of a QA system but does not form a full-fledged
+system by itself.
+It may be argued that returning a whole passage is more useful for the user than a direct narrow answer,
+but this precludes any reasoning or other indirect answer synthesis on the part of the system,
+while the context and supporting evidence can be still provided by the user interface.
+Direct answer output may be also used in a more general AI reasoning engine.
+
+
+TODO summary of rest of thesis

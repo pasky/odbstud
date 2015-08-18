@@ -1,0 +1,44 @@
+% !TEX program = xelatex
+\documentclass[11pt,a4paper]{report}
+\usepackage{polyglossia}
+\usepackage{fontspec}
+\usepackage{subfig}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage[round]{natbib}
+
+% natbib link joining; somewhat breaks \cite, \citet
+\makeatletter
+\renewcommand\hyper@natlinkbreak[2]{#1}
+\makeatother
+
+\usepackage{geometry}
+\geometry{%
+	includeheadfoot,
+	margin=1in
+}
+
+\def\TODO{{\bf ??? }}
+
+\title{Systems and Approaches for Question Answering}
+\author{Mgr. Petr Baudiš}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}%
+	We survey the field of factoid question answering and propose
+	lines of direction for further research in the area.
+\end{abstract}
+
+\tableofcontents
+
+\include{intro}
+\include{survey}
+\include{work}
+\include{plan}
+
+\bibliographystyle{plainnat}
+\bibliography{qa}
+
+\end{document}

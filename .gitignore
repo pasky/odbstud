@@ -1,0 +1,11 @@
+.*
+
+*.aux
+*.log
+*.toc
+*.bbl
+*.blg
+*.out
+
+odbstud.pdf
+ranks.eps
