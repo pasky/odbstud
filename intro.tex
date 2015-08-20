@@ -8,9 +8,9 @@ and defend at the Czech Technical University on the topic of question
 answering systems.
 
 This thesis proposal is a little unusual since I have radically changed
-the topic of my research in the course of the second year of study:
+the topic of my research in the course of my second year of study:
 from portfolio-based function optimization to question answering systems.
-Therefore, bulk of my research results published up to now are not
+Therefore, the bulk of my research results published up to now are not
 on topic of the proposed thesis.  I shall at least briefly showcase
 the main points of my past research in the next section,
 after which I exclusively focus at the topic of question answering
@@ -50,7 +50,10 @@ The problem of algorithm selection is not new \cite{Rice}
 and was so far popular mainly when applied to
 combinatorial problem solvers \cite{combpfsurvey}.
 In my work, I adopted the prism of algorithm portfolios \cite{algportfolios}
-with \textit{online} selection.
+with \textit{online} selection.%
+\footnote{The concept of offline selection also occurs in the literature,
+	when we assume a stream of function instances and apply just a single
+	algorithm on each of the instances.}
 That is, multiple diverse optimization algorithms are applied
 to the given function instance simultaneously, with the best
 performers quickly gaining the largest time allocation (that is,
@@ -59,7 +62,7 @@ the chance to perform the most optimization steps).
 Deciding which algorithm to apply in each step of the portfolio
 optimization is essentialy an instance of the well-known Multi-Armed
 Bandit Problem, where a policy decides which algorithm to try next
-based on their emprically determined expected reward.
+based on their empirically determined expected reward.
 I have built a modular Python framework \textbf{COCOpf} \cite{COCOpf}
 suitable both for research and application of this problem.
 
@@ -71,7 +74,7 @@ diverse optimization algorithms and based on performance evaluation
 using the popular COCO optimization benchmark \cite{COCO1}, I have
 identified a policy that significantly improves the baseline and
 on well-behaved functions on average overperforms even the overally
-best individual algorithm. This result has been presented on the
+best individual algorithm. This result was presented at the
 PPSN 2014 conference. \cite{optpf}
 
 \subsection{Minimizing Separable Functions by a Mix of Methods}
@@ -108,7 +111,7 @@ in general outperforms both of them,
 in the univariate case often by a wide margin,
 and that it is behaving robustly even when one of the constituent methods
 is failing to converge.
-This result has been presented on the GECCO 2015 conference.
+This result was presented at the GECCO 2015 conference.
 \cite{ndsqistep}
 
 \section{Question Answering}
@@ -146,7 +149,7 @@ in this direction is certainly worthwhile.
 
 TODO some examples of questions and answers
 
-\subsection{Problem Structure}
+\subsection{Task Outline}
 
 Diverse QA system architectures have been proposed in the last 15 years,
 applying different approaches to information retrieval.  A full survey
@@ -159,13 +162,14 @@ facts logically) and should return precisely specified, relatively short
 text snippets as short answers.  Answering happens mainly based on fact
 lookup.  This is in contrast with different question answering tasks
 (like Language Comprehension Entrance Exams) where the system needs to
-process a text passage and answer tricky questions about the text meaning.
+process a text passage and answer tricky questions about the text meaning
+(see Sec.~\ref{sec:nonfactoid}).
 
 Perhaps the most popular approach in factoid QA research has been restricting
 the task to querying structured knowledge bases, typically using the
 RDF paradigm and accessible via SPARQL\@.  The QA problem can
 be then rephrased as learning a function translating free-text user query
-to a structured lambda expression or SPARQL query. \cite{Semantic2013Berant} \cite{Semantic2014Bordes}
+to a structured lambda expression or SPARQL query. \cite{Semantic2013Berant, Semantic2014Bordes}
 I prefer to focus on unstructured datasets as the coverage of the system
 as well as domain versatility increases dramatically; building a combined
 portfolio of structured and unstructured knowledge bases
@@ -173,13 +177,13 @@ is then again an obvious extension.
 
 When relying on unstructured knowledge bases, a common strategy is to offload
 the information retrieval on an external high-quality web search engine
-like Google or Bing (see e.g.\ the \textbf{Mulder} system \cite{MulderKwok}
+like Google or Bing (see e.g.\ the \textbf{AskMSR} system \cite{AskMSR}
 or many others).
 I make a point of relying purely on local information sources.%
 \footnote{However, as non-benchmarked extension, YodaQA also includes
 	Bing search as described in Sec.~\ref{sec:bing}.}
 While the task becomes noticeably harder,
-I believe the result is a more
+I believe the outcome is a more
 universal system that could be readily refocused on a specific domain
 or proprietary knowledge base, and also a system more appropriate as
 a scientific platform as the results are fully reproducible over time.
@@ -194,10 +198,10 @@ It may be argued that returning a whole passage is more useful for the user than
 but this precludes any reasoning or other indirect answer synthesis on the part of the system,
 while the context and supporting evidence can be still provided by the user interface.
 Direct answer output may be also used in a more general AI reasoning engine,
-an idea that I keep in sight during the design process but is clearly
+an idea that I keep in sight within my design though it is clearly
 out of scope for the thesis I propose.
 
-Therefore, the system I propose should produce short, clear answers
+To summarize, the system I propose should produce short, clear answers
 based on information retrieval from both
 unstructured (full-text) and structured (database) knowledge bases,
 and not rely on any ``omniscient web search'' to make the task easier
@@ -205,8 +209,8 @@ specifically in the open domain setting.
 
 \section{This Thesis Proposal}
 
-The rest of this proposal shall focus on building a case for writing
-a thesis on the topic of question answering systems.
+The rest of this proposal shall focus on building the case for
+a thesis on the topic of factoid question answering.
 Chapter~\ref{ch:survey}
 surveys the field in detail, examining different formulations of the problem
 as well as a variety of sub-tasks, reference datasets and approaches,
