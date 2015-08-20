@@ -1,8 +1,121 @@
 \chapter{Introduction}
+\label{ch:intro}
 
-something about my PhD research (past work on portfolios, etc.)
+TODO some nice quote
+
+In this report, I would like to propose a doctoral thesis to write
+and defend at the Czech Technical University on the topic of question
+answering systems.
+
+This thesis proposal is a little unusual since I have radically changed
+the topic of my research in the course of the second year of study:
+from portfolio-based function optimization to question answering systems.
+Therefore, bulk of my research results published up to now are not
+on topic of the proposed thesis.  I shall at least briefly showcase
+the main points of my past research in the next section,
+after which I exclusively focus at the topic of question answering
+and propose a thesis on this topic.
+
+\section{Portfolio-Based Optimization}
+
+The initial focus of my doctoral research
+was developing algorithm portfolio strategies
+with applications particularly in continuous black-box optimization.
+The results of my work have been a software framework for experiments
+\cite{COCOpf}
+and two results published at top-tier conferences \cite{optpf,ndsqistep}.
+This research has been primarily supervised by Dr. Petr Pošík.
+
+Let us consider the problem of finding a minimum value of a continuous
+real-parameter function that has inaccessible analytical form.%
+\footnote{No analytical form implies that we do not have information
+e.g.\ on the derivatives of the function, except approximating
+them numerically.}
+This is a rich area of research that produced many algorithms over
+the last 50 years --- from the venerable Nelder-Mead simplex
+algorithm \cite{NM1} to various gradient descent methods to
+population-based methods.
+
+\subsection{Online Black-box Algorithm Portfolios}
+
+The key question in the face of such variety of optimization
+algorithms is ``which algorithm should I choose?''
+Unified comparison benchmarks \cite{COCO1}
+can help determining the best option for a particular function class.
+However, if a function is truly ``black-box'' and its features
+are hard to predict, an automated process with minimum overhead
+is certainly desirable.
+
+The problem of algorithm selection is not new \cite{Rice}
+and was so far popular mainly when applied to
+combinatorial problem solvers \cite{combpfsurvey}.
+In my work, I adopted the prism of algorithm portfolios \cite{algportfolios}
+with \textit{online} selection.
+That is, multiple diverse optimization algorithms are applied
+to the given function instance simultaneously, with the best
+performers quickly gaining the largest time allocation (that is,
+the chance to perform the most optimization steps).
+
+Deciding which algorithm to apply in each step of the portfolio
+optimization is essentialy an instance of the well-known Multi-Armed
+Bandit Problem, where a policy decides which algorithm to try next
+based on their emprically determined expected reward.
+I have built a modular Python framework \textbf{COCOpf} \cite{COCOpf}
+suitable both for research and application of this problem.
+
+This helped me to identify fine structure of the problem
+(particularly, I proposed a classification of functions based on
+their in-portfolio behavior).
+Further, I have built a reference portfolio of seven well-known
+diverse optimization algorithms and based on performance evaluation
+using the popular COCO optimization benchmark \cite{COCO1}, I have
+identified a policy that significantly improves the baseline and
+on well-behaved functions on average overperforms even the overally
+best individual algorithm. This result has been presented on the
+PPSN 2014 conference. \cite{optpf}
+
+\subsection{Minimizing Separable Functions by a Mix of Methods}
+
+Another tier of research on how to best combine different optimization
+algorithms concerns speeding up optimization of continuous black-box
+\textit{separable} functions in particular.  I have closely cooperated
+on this research with my supervisor, Dr. Petr Pošík.
+
+Separable multivariate functions can be decomposed to a sum of univariate
+functions, each parametrized solely by a single dimension of the input
+vector.
+For some very hard separable functions, exploiting separability
+is the only way to quickly find the minimum and a natural idea to optimize
+such functions is to use univariate optimization algorithms on individual
+dimensions.
+In \cite{PosikGECCO2009LineSearch}, Brent's method \cite{Brent1973} and the STEP algorithm \cite{STEP} were used to separately optimize the function along each dimension.
+Brent's method was shown to be fast in case of unimodal functions, but due to its local nature it fails on multimodal functions.
+The global STEP method was able to solve both the uni- and multimodal functions, but needed much larger number of function evaluations.
+Moreover, their multidimensional variants were constructed inefficiently: the dimensions were optimized sequentially, one by one.
+
+We have built on the above mentioned methods, and contributed two improvements:
+
+\begin{enumerate}
+	\item We combined Brent's method and STEP into a single algorithm which converges faster than STEP (in many cases, it is almost as fast as Brent's method), while it preserves the global search ability of STEP (thus solving a larger proportion of functions than Brent's method, and often doing it faster).
+
+	\item We suggested a better way of making a multidimensional variant of this method. As opposed to solving the 1D problem in all dimensions sequentially, we proposed to interleave the steps in individual dimensions, updating the full coordinates of sampled points based on results obtained in other dimensions so far.
+\end{enumerate}
+
+Thus, we have introduced a new hybrid algorithm ``Brent-STEP'' combining
+these two methods non-trivially and demonstrated that
+on univariate and separable functions the hybrid algorithm
+in general outperforms both of them,
+in the univariate case often by a wide margin,
+and that it is behaving robustly even when one of the constituent methods
+is failing to converge.
+This result has been presented on the GECCO 2015 conference.
+\cite{ndsqistep}
 
 \section{Question Answering}
+
+Quick summary.
+
+TODO revise
 
 We consider the Question Answering problem --- a function of
 unstructured user query that returns the information queried for.
