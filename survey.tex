@@ -33,7 +33,7 @@ with e.g.\ all answer producers sharing a common answer analysis stage.
 
 
 
-\section{Structured Data}
+\section{Structured Data QA}
 
 Benchmark:  WebQuestions (pre-determined splits), TREC (various years, curated version, \dots), WikiAnswers.
 
@@ -81,7 +81,7 @@ and seem roughly comparable.
 
 \textbf{(SEMPRE)} \cite{SPBerant2014Paraphrase}
 
-\section{Unstructured Data}
+\section{Unstructured Data QA}
 
 When dealing with question answering on top of unstructured data,
 two research directions exist: aside of generating a crisp answer,
@@ -142,7 +142,7 @@ TREC benchmark.  Curated TREC.  WebQuestions also possible(?).
 
 \textbf{MemNets} though I still think it's a toy task in QA context.
 
-\section{Auxiliary Tasks}
+\section{Auxiliary Tasks in QA}
 
 \subsection{Question Classification}
 
@@ -220,7 +220,7 @@ is missing (e.g.\ in a context detailing an incident of the well-known personali
 	Three composite vector embedding models are considered,
 	based on bi-directional LSTM and convolution-ish architectures.
 
-\section{Hybrid Systems}
+\section{Hybrid QA Systems}
 
 Full-scale end-to-end systems combining structured and unstructured approaches.
 
@@ -231,3 +231,74 @@ Full-scale end-to-end systems combining structured and unstructured approaches.
 \section{Non-Factoid QA}
 
 TODO very short overview.  The MemNN task.  Text entailment.
+
+\section{Vector Embeddings of Words}
+
+TODO rewrite, expand.
+
+Recent progress in NLP has been marked mainly by the proliferation of
+so-called \textit{vector embeddings}, the most popular being called
+\textit{word2vec}.  This approach stems from the so-called \textit{distributional semantics}
+hypothesis, which posits that we can derive meanings of words purely
+from the context they tend to appear in.  Therefore, each word is
+associated with a list of $n$ real numbers (i.e.\ coordinates of
+an $n$-dimensional vector) and these numbers are derived automatically
+just from the context the words appear in.%
+\footnote{The \textit{word2vec} method uses an idea called \textit{multi-task learning}
+	which may be useful for us as well --- we try to learn
+	some easy-to-specify task and then we re-use the same model to
+	solve some much harder problems.  Here, the $n$ real numbers
+	come out from training a classifier that predicts the most likely
+	next words to come given a context of (say, 100) preceding words;
+	this so-called \textit{language model} task is useful e.g.\ in
+	speech recognition or OCR.}
+The interesting property is that the automatically assigned numbers
+exhibit semantic properties in how they relate between words.
+For example, if we do arithmetics on these word vectors and try
+to compute e.g.\ $king + (woman - man)$, the nearest vector we reach
+is $queen$, i.e.\ the gender transition is represented by an arrow
+in our vector space (Fig.~\ref{fig:w2vg}).
+Fig.~\ref{fig:w2ver} shows how relationships between adjectives are represented
+while Fig.~\ref{fig:w2vc} shows mappings between coordinates of countries
+and their capitals.  Let us emphasize again that these coordinates were
+determined purely based on the context of the words (in Wikipedia or
+millions of news articles); the system did not have any extra information
+or databases available.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=10cm]{kingqueen.png}
+	\caption{Semantic relationships between words as arrows in the vector space. \cite{WordVecLingReg}}
+	\label{fig:w2vg}
+\end{figure}
+
+\begin{figure}[p]
+	\centering
+	\includegraphics[width=10cm]{comparative_superlative.jpg}
+	\caption{Semantic relationships between superlative adjectives as represented in the vector space.
+		This is a 2D projection of the high-dimensional space that is designed to well preserve relative positions of the shown entities
+		(so-called t-SNE 2D).
+		\cite{Glove}}
+	\label{fig:w2ver}
+\end{figure}
+
+\begin{figure}[p]
+	\centering
+	\includegraphics[width=11cm]{capitals.png}
+	\caption{Mappings between countries and capitals, acquired entirely from the typical context of the respective words.
+	This is again a 2D projection of the high-dimensional space, this time obtained by a PCA dimensionality reduction technique.
+	\cite{DistReprComp}}
+	\label{fig:w2vc}
+\end{figure}
+
+A lot of the current research focuses on the best ways to build up
+vector representations of whole sentences and documents --- ranging
+from simple averaging \citep{CNNSentClass,DefGen} (successful baselines)
+to recurrent neural networks \citep{LISA,ShowAndTell}.
+Many applications that rely on semantic understanding of word nuances
+are popping up; this method became state-of-art for machine translation
+\citep{LISA}, automatic image captioning \citep{ShowAndTell} and specific
+types of question answering \citep{QANTA,DefGen,ReadAndComprehend}%
+\footnote{The demo at \url{http://45.55.181.170/defgen/} is nice.}.
+One open problem is efficient composition of vector embeddings for
+common words with entities like numbers or proper names.
