@@ -22,8 +22,8 @@ The initial focus of my doctoral research
 was developing algorithm portfolio strategies
 with applications particularly in continuous black-box optimization.
 The results of my work have been a software framework for experiments
-\cite{COCOpf}
-and two results published at top-tier conferences \cite{optpf,ndsqistep}.
+\citep{COCOpf}
+and two results published at top-tier conferences \citep{optpf,ndsqistep}.
 This research had been primarily supervised by Dr. Petr Pošík.
 
 Let us consider the problem of finding a minimum value of a continuous
@@ -33,23 +33,23 @@ e.g.\ on the derivatives of the function, except approximating
 them numerically.}
 This is a rich area of research that produced many algorithms over
 the last 50 years --- from the venerable Nelder-Mead simplex
-algorithm \cite{NM1} to various gradient descent methods to
+algorithm \citep{NM1} to various gradient descent methods to
 population-based methods.
 
 \subsection{Online Black-box Algorithm Portfolios}
 
 The key question in the face of such variety of optimization
 algorithms is ``which algorithm should I choose?''
-Unified comparison benchmarks \cite{COCO1}
+Unified comparison benchmarks \citep{COCO1}
 can help determining the best option for a particular function class.
 However, if a function is truly ``black-box'' and its features
 are hard to predict, an automated process with minimum overhead
 is certainly desirable.
 
-The problem of algorithm selection is not new \cite{Rice}
+The problem of algorithm selection is not new \citep{Rice}
 and was so far popular mainly when applied to
-combinatorial problem solvers \cite{combpfsurvey}.
-In my work, I adopted the prism of algorithm portfolios \cite{algportfolios}
+combinatorial problem solvers \citep{combpfsurvey}.
+In my work, I adopted the prism of algorithm portfolios \citep{algportfolios}
 with \textit{online} selection.%
 \footnote{The concept of offline selection also occurs in the literature,
 	when we assume a stream of function instances and apply just a single
@@ -63,7 +63,7 @@ Deciding which algorithm to apply in each step of the portfolio
 optimization is essentialy an instance of the well-known Multi-Armed
 Bandit Problem, where a policy decides which algorithm to try next
 based on their empirically determined expected reward.
-I have built a modular Python framework \textbf{COCOpf} \cite{COCOpf}
+I have built a modular Python framework \textbf{COCOpf} \citep{COCOpf}
 suitable both for research and application of this problem.
 
 This helped me to identify fine structure of the problem
@@ -71,11 +71,11 @@ This helped me to identify fine structure of the problem
 their in-portfolio behavior).
 Further, I have built a reference portfolio of seven well-known
 diverse optimization algorithms and based on performance evaluation
-using the popular COCO optimization benchmark \cite{COCO1}, I have
+using the popular COCO optimization benchmark \citep{COCO1}, I have
 identified a policy that significantly improves the baseline and
 on well-behaved functions on average overperforms even the overally
 best individual algorithm. This result was presented at the
-PPSN 2014 conference. \cite{optpf}
+PPSN 2014 conference. \citep{optpf}
 
 \subsection{Minimizing Separable Functions by a Mix of Methods}
 
@@ -91,7 +91,7 @@ For some very hard separable functions, exploiting separability
 is the only way to quickly find the minimum and a natural idea to optimize
 such functions is to use univariate optimization algorithms on individual
 dimensions.
-In \cite{PosikGECCO2009LineSearch}, Brent's method \cite{Brent1973} and the STEP algorithm \cite{STEP} were used to separately optimize the function along each dimension.
+In \citep{PosikGECCO2009LineSearch}, Brent's method \citep{Brent1973} and the STEP algorithm \citep{STEP} were used to separately optimize the function along each dimension.
 Brent's method was shown to be fast in case of unimodal functions, but due to its local nature it fails on multimodal functions.
 The global STEP method was able to solve both the uni- and multimodal functions, but needed much larger number of function evaluations.
 Moreover, their multidimensional variants were constructed inefficiently: the dimensions were optimized sequentially, one by one.
@@ -112,16 +112,16 @@ in the univariate case often by a wide margin,
 and that it is behaving robustly even when one of the constituent methods
 is failing to converge.
 This result was presented at the GECCO 2015 conference.
-\cite{ndsqistep}
+\citep{ndsqistep}
 
 \section{Question Answering}
 
 The current focus of my doctoral research
 is improving the state-of-art in the field of factoid question answering.
 My main results so far have been
-building an extensive question answering system \textbf{YodaQA} \cite{YodaQAPoster2015}
-and proposing a high-quality dataset \cite{YodaQACLEF2015},
-but I have also applied the system to a biological QA domain \cite{YodaQABioASQ2015}
+building an extensive question answering system \textbf{YodaQA} \citep{YodaQAPoster2015}
+and proposing a high-quality dataset \citep{YodaQACLEF2015},
+but I have also applied the system to a biological QA domain \citep{YodaQABioASQ2015}
 and achieved some new results not published yet (described later in the proposal).
 This research is primarily supervised by Dr. Jan Šedivý;
 some of the newest results have been achieved while collaborating
@@ -137,9 +137,9 @@ returns whole documents or sets of passages instead of the specific
 information).
 
 The Question Answering task is however a natural extension of a search
-engine, as currently employed e.g.\ in Google Search \cite{googleKG}
+engine, as currently employed e.g.\ in Google Search \citep{googleKG}
 or personal assistants like Apple Siri, and with the high
-profile IBM Watson Jeopardy! matches \cite{WatsonOverview}
+profile IBM Watson Jeopardy! matches \citep{WatsonOverview}
 it has became a benchmark of progress in AI research.
 
 My goal is ultimately building a general purpose QA system.
@@ -169,7 +169,7 @@ Perhaps the most popular approach in factoid QA research has been restricting
 the task to querying structured knowledge bases, typically using the
 RDF paradigm and accessible via SPARQL\@.  The QA problem can
 be then rephrased as learning a function translating free-text user query
-to a structured lambda expression or SPARQL query. \cite{Semantic2013Berant, Semantic2014Bordes}
+to a structured lambda expression or SPARQL query. \citep{Semantic2013Berant, Semantic2014Bordes}
 I prefer to focus on unstructured datasets as the coverage of the system
 as well as domain versatility increases dramatically; building a combined
 portfolio of structured and unstructured knowledge bases
@@ -177,7 +177,7 @@ is then again an obvious extension.
 
 When relying on unstructured knowledge bases, a common strategy is to offload
 the information retrieval on an external high-quality web search engine
-like Google or Bing (see e.g.\ the \textbf{AskMSR} system \cite{AskMSR}
+like Google or Bing (see e.g.\ the \textbf{AskMSR} system \citep{AskMSR}
 or many others).
 I make a point of relying purely on local information sources.%
 \footnote{However, as non-benchmarked extension, YodaQA also includes
@@ -190,7 +190,7 @@ a scientific platform as the results are fully reproducible over time.
 
 Finally, a common restriction of the QA problem concerns only selecting
 the most relevant answer-bearing passage, given a tuple of input question
-and set of pre-selected candidate passages \cite{WangQAGrammar}.
+and set of pre-selected candidate passages \citep{WangQAGrammar}.
 This Answer Sentence Selection task is certainly
 worthwhile as a component of a QA system but does not form a full-fledged
 system by itself.

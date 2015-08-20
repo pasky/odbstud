@@ -16,7 +16,7 @@
 The goals for our system \textbf{brmson{\footnotesize\,\texttrademark{}} YodaQA} are to provide an open source
 Question Answering platform that can serve both as scientific research
 testbed and a practical system. The pipeline is implemented mainly in Java,
-using the popular Apache UIMA framework \cite{UIMA}.  Extensive support
+using the popular Apache UIMA framework \citep{UIMA}.  Extensive support
 tooling is included within the package.
 
 Unlike OAQA, in YodaQA each artifact (question, search result, passage,
@@ -48,7 +48,7 @@ with the flow as in Fig.~\ref{fig:arch}, encompassing the following stages:
 \end{itemize}
 
 The basic pipeline flow is much inspired by the Deep\-QA model
-of IBM Watson \cite{WatsonPipeline}.  Throughout the flow, answer features
+of IBM Watson \citep{WatsonPipeline}.  Throughout the flow, answer features
 are gradually accumulated and some results of early flow stages (especially
 the question analysis) are carried through the rest of the flow.
 
@@ -60,18 +60,18 @@ The particular Question Answering problem considered in the reference
 pipeline is finding a precise (narrowly phrased) answer to a naturally
 phrased English question, based on both unstructured (English Wikipedia,
 \textit{enwiki})
-and structured (DBpedia \cite{dbpedia}, Freebase \cite{freebase}) knowledge bases.
+and structured (DBpedia \citep{dbpedia}, Freebase \citep{freebase}) knowledge bases.
 
 In our pipeline, we build on existing third-party NLP analysis tools,
-in particular Stanford CoreNLP (Segmenter, POS-Tagger, Parser) \cite{StanfordCoreNLP} \cite{StanfordNNParser},
-OpenNLP (Segmenter, NER) \cite{OpenNLP} and LanguageTool (Segmenter, Lemmatizer).%
+in particular Stanford CoreNLP (Segmenter, POS-Tagger, Parser) \citep{StanfordCoreNLP} \citep{StanfordNNParser},
+OpenNLP (Segmenter, NER) \citep{OpenNLP} and LanguageTool (Segmenter, Lemmatizer).%
 \footnote{\url{http://www.languagetool.org/}}%
 \footnote{Sometimes, different pipeline components default to different
 NLP backends to perform the same task, e.g.\ segmentation,
 based on empirically determined best fit.}
 NLP analysis backends are freely interchangeable thanks
-to the DKPro UIMA interface \cite{DKPro}.
-For semantic analysis, we also rely heavily on the WordNet lexicon \cite{WordNet}.
+to the DKPro UIMA interface \citep{DKPro}.
+For semantic analysis, we also rely heavily on the WordNet lexicon \citep{WordNet}.
 
 For a practical illustration of the pipeline processing two particular example questions,
 please follow Fig.~\ref{fig:exEnder} and~\ref{fig:exIditarod}.
@@ -82,7 +82,7 @@ please follow Fig.~\ref{fig:exEnder} and~\ref{fig:exIditarod}.
 During question analysis,
 produce a part-of-speech tagging and dependency parse of the question text,
 recognize named entities and,
-roughly inspired by the DeepQA system \cite{WatsonQuestion},
+roughly inspired by the DeepQA system \citep{WatsonQuestion},
 heuristically generate several QA features: Clues, Focus, and LAT.
 
 \textbf{Clues} represent keywords in the question that determine its content
@@ -103,7 +103,7 @@ Six simple hand-crafted heuristics extract the focus based on the dependency par
 
 \textbf{LAT} (Lexical Answer Type) describes a type of the answer that would fit the question.
 This type is not of a pre-defined category but may be an arbitrary English noun,
-like in the DeepQA system. \cite{WatsonTyCor}
+like in the DeepQA system. \citep{WatsonTyCor}
 The LAT is derived from the focus, except question words are mapped to nouns
 (``where'' to ``location'', etc.)
 and adverbs (like ``hot'') are nominalized (to ``temperature'') using WordNet relations.
@@ -115,15 +115,15 @@ in our default setting the \textit{enwiki}.
 While the information has no formal structure, we take advantage of the organization of the \textit{enwiki} corpus
 where entity descriptions are stored in articles that bear the entity name as title
 and the first sentence is typically an informative short description of the entity.
-Our search strategies are analogous to basic DeepQA free-text information retrieval methods \cite{WatsonIR}.
+Our search strategies are analogous to basic DeepQA free-text information retrieval methods \citep{WatsonIR}.
 We use the Apache Solr\footnote{\url{http://lucene.apache.org/solr/}} search engine (frontend to Apache Lucene).
 
-\textbf{Title-in-clue search} \cite{WatsonIR} looks for the question clues in the article titles,
+\textbf{Title-in-clue search} \citep{WatsonIR} looks for the question clues in the article titles,
 essentially aiming to find articles that describe the concepts touched in the question.
 The first sentence of the top six articles (which we assume is its summary)
 is then used in passage analysis (see below).
 
-\textbf{Full-text search} \cite{WatsonIR} runs a full-text clue search in the article texts and titles,
+\textbf{Full-text search} \citep{WatsonIR} runs a full-text clue search in the article texts and titles,
 considering the top six results.
 The document texts are split to sentences which are treated as separate passages
 and scored based on sum of weights of clues occuring in each passage\footnote{%
@@ -132,7 +132,7 @@ The \textit{about-clues} which occur in the document title have their weight div
 		but they have not been improving performance so far.};
 the top three passages from each document are picked for passage analysis.
 
-\textbf{Document search} \cite{WatsonIR} runs a full-text clue search in the article texts;
+\textbf{Document search} \citep{WatsonIR} runs a full-text clue search in the article texts;
 top 20 article hits are then taken as potential responses,
 represented as candidate answers by their titles.
 
@@ -187,7 +187,7 @@ The generated features describe the origin of the answer (data source, search re
 
 \subsection{Answer Merge-and-Score}
 
-The merging and scoring process also basically follows a simplified DeepQA approach \cite{WatsonScoring}.
+The merging and scoring process also basically follows a simplified DeepQA approach \citep{WatsonScoring}.
 Candidate answers of the same text (up to basic normalization, like \textit{the-} removal) are merged;
 element-wise maximum is taken as the resulting answer feature vector
 (except for the \texttt{\#occurences} feature, where a sum is taken).
@@ -402,8 +402,8 @@ unfortunately, as there is no universally agreed experimental setup so far
 and not even published results on the TREC datasets
 from the years we use are readily available.
 OpenEphyra seemed to typically achieve accuracy-at-one of ``above 25\%'' on
-the TREC datasets including our years according to \cite{Ephyra2006}.
-In the Answer Sentence Selection task \cite{WangQAGrammar},
+the TREC datasets including our years according to \citep{Ephyra2006}.
+In the Answer Sentence Selection task \citep{WangQAGrammar},
 Jacana and similar textual entaliement systems are reported%
 \footnote{See the \textbf{ACL Wiki} topic \textit{Question Answering (State of the art)}.}
 to achieve MRR around 0.750 but this task represents
@@ -432,11 +432,11 @@ with ours benchmarked on non-curated version of the TREC 2002, 2003 dataset test
 \begin{tabular}{|c|cccc|}
 \hline
 System & Accuracy-at-1 & Recall & F1 & MRR \\ \hline
-LLCpass03 \cite{LCC} (hand-crafted system) & 68.5\% & & & \\
-AskMSR \cite{AskMSR} (web-search system) & 61.4\% & & & 0.507 \\ \hline
-OpenEphyra \cite{Ephyra2006} (hand-crafted OSS) & ``above 25\%'' & & & \\
-JacanaIR \cite{TreeEditIR2013Yao} (modern fully-learned OSS) & & & & 0.299$^*$ \\
-OQA \cite{OQA} (modern fully-learned OSS) & & & 29\%$^{**}$ & \\ \hline
+LLCpass03 \citep{LCC} (hand-crafted system) & 68.5\% & & & \\
+AskMSR \citep{AskMSR} (web-search system) & 61.4\% & & & 0.507 \\ \hline
+OpenEphyra \citep{Ephyra2006} (hand-crafted OSS) & ``above 25\%'' & & & \\
+JacanaIR \citep{TreeEditIR2013Yao} (modern fully-learned OSS) & & & & 0.299$^*$ \\
+OQA \citep{OQA} (modern fully-learned OSS) & & & 29\%$^{**}$ & \\ \hline
 \textbf{YodaQA v1.0} & 25.1\% & 62.2\% & 35.8\% & 0.323 \\
 \hline
 \end{tabular}
