@@ -84,7 +84,8 @@ We have built on the above mentioned methods, and contributed two improvements:
 \begin{enumerate}
 	\item We combined Brent's method and STEP into a single algorithm which converges faster than STEP (in many cases, it is almost as fast as Brent's method), while it preserves the global search ability of STEP (thus solving a larger proportion of functions than Brent's method, and often doing it faster).
 
-	\item We suggested a better way of making a multidimensional variant of this method. As opposed to solving the 1D problem in all dimensions sequentially, we proposed to interleave the steps in individual dimensions, updating the full coordinates of sampled points based on results obtained in other dimensions so far.
+	\item We suggested a better way of making a multidimensional variant of this method. As opposed to solving the 1D problem in all dimensions sequentially, we proposed to interleave the steps in individual dimensions, updating the full coordinates of sampled points based on results obtained in other dimensions so far.%
+\footnote{Later, we found out about a similar recent work by Ilya Loschilov \cite{HCMA}, but our algorithm reaches better results.}
 \end{enumerate}
 
 Thus, we have introduced a new hybrid algorithm ``Brent-STEP'' combining
