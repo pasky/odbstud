@@ -1,0 +1,85 @@
+\chapter{Examples: YodaQA Pipeline Analysis}
+\label{app:analysis}
+
+TODO: Revise and update.
+
+
+\begin{figure}[t!]
+% increase table row spacing, adjust to taste
+\renewcommand{\arraystretch}{1.3}
+\centering
+\footnotesize
+\begin{tabular}{|p{1.8cm}p{6cm}|}
+\hline
+Question Text & Who wrote Ender's Game? \\
+Q. Analysis & \textbf{Focus:} who; \textbf{SV:} wrote; \textbf{LAT:} person \\
+Question Clues & Ender's Game \textbf{(concept clue)}, wrote \\ \hline
+
+Primary Search (DBpOnt.) & \textbf{author:} Orson Scott Card, \textbf{publisher:} Tor Books, \dots \\
+Primary Search (DBpProp.) & (ibid), \textbf{cover artist:} John Harris, \textbf{Caption:} 2005, \dots \\
+Primary Search (Freebase) & \textbf{Author} Orson Scott Card, \textbf{Characters} Valentine Wiggin, Hive Queen, \dots \\
+Primary Search (concepts) & \textit{enwiki} Ender's Game \\
+Primary Search (fulltext) %
+	& \textbf{Query:} \texttt{+("wrote" OR titleText: "wrote")\^{}1.0 +("ender's Game" OR titleText:"ender's Game")\^{}1.1  ("wrote ender's Game "\textasciitilde4)\^{}2.1} \dots \\
+	& \textbf{Found:} Ender's Game (series), Ender's Game, Ender's Game (film), Ender's Game (comics), Jane (Ender's Game), List of Ender's Game series planets \\
+	& \textbf{Sample picked passages:} {\footnotesize Elaborating on characters and plot lines depicted in the novel, Card later wrote additional books to form the Ender's Game series.} \\
+	& \dots {\footnotesize Valentine wrote an essay here comparing the priestly class to the skeletons of small vertebrates some time before Speaker for The Dead.} \\
+Primary Search (titles) & Ender's Game, List of Ender's Game characters, Jane (Ender's Game), Ender's Game (short story), Ender's Game (film), Ender's Game (series) \\
+	& \textbf{Sample first passage:} {\footnotesize "Ender's Game" is a 1985 military science fiction novel by American author Orson Scott Card.} \\
+Primary Search (document) & Ender's Game (series), Elisabeth Hirsch, Orson Scott Card, Ender in Exile, Worthing Inn, Jane (Ender's Game), \dots \\ \hline
+
+\textbf{Orscon Scott Card} & Structured primary search LAT \textit{author} (Wordnet hypernyms \textit{communicator}, \textit{person}, \textit{maker}, \textit{creator}); DBpedia LAT \textit{writer} (Wordnet hypernyms \textit{communicator}, \textit{person}); NER LAT \textit{person} \\
+	& Successful type coercion match\textbf{!}, ``sharp'' (exact specific) match from NER LAT\textbf{!} \\
+	& \textbf{occurences:} 19\textbf{!}, \textbf{origins:} document title, concept\textbf{!}, first passage, noun phrase, named entity, multiple origins, \textbf{other:} adjecent to a concept clue mention, no clue text overlap\textbf{!} \\
+\textbf{Jane} & Structured primary search LAT \textit{character} (Wordnet hypernyms \textit{imaginary being}, \textit{creativity}, \textit{person}, \textit{message} and 36 others); NER LAT \textit{person} \\
+	& Successful type coercion match\textbf{!}, ``sharp'' (exact specific) match from NER LAT\textbf{!} \\
+	& \textbf{occurences:} 4, \textbf{origins} document title, first passage, noun phrase, named entity, multiple origins,
+	\textbf{other:} no clue text overlap\textbf{!} \\ \hline
+
+Final Answers & \textbf{Orson Scott Card} (0.99), Neal Shusterman (0.96), Elisabeth Hirsch (0.96), American author Orson Scott Card (0.96), \dots, List of Ender's Game series planets (0.94), Gavin Hood (0.94), Print (0.93), Jane (0.91), \dots \\ \hline
+\end{tabular}
+\vspace*{-0.2cm}
+\caption{A sample of the pipeline process when (correctly) answering a training question. \textbf{!} indicates particularly distinguishing features.}
+\label{fig:exEnder}
+\end{figure}
+
+\begin{figure}[t!]
+% increase table row spacing, adjust to taste
+\renewcommand{\arraystretch}{1.3}
+\centering
+\footnotesize
+\begin{tabular}{|p{1.8cm}p{6cm}|}
+\hline
+Question Text & What is the name of the famous dogsledding race held each year in Alaska? \\
+Q. Analysis & \textbf{Focus:} name; \textbf{SV:} held; \textbf{LAT:} race
+	(by Wordnet hypernym: \textit{contest}, \textit{event}, \textit{biological group}, \textit{canal} and 9 others) \\
+Question Clues & name, Alaska \textbf{(concept clues)}, race, held, famous, dogsledding, race, year \\ \hline
+
+Primary Search (DBpOnt.) & \textbf{area Total:} 1717854.0, \textbf{country:} United States, \dots \\
+Primary Search (DBpProp.) & (ibid), \textbf{West:} Chukotka, \textbf{Income Rank:} 4, \dots \\
+Primary Search (Freebase) & \textbf{Date Founded} 1959-01-03, \textbf{Capital} Juneau, \dots \\
+Primary Search (concepts) & \textit{enwiki} Alaska, Name \\
+	& \textbf{Sample picked passages:} Various races are held around the state, but the best known is the Iditarod Trail Sled Dog Race, a 1150 mi trail from Anchorage to Nome (although the distance varies from year to year, the official distance is set at 1049 mi). \\
+	& \dots Automobiles typically have a binomial name, a "make" (manufacturer) and a "model", in addition to a model year, such as a 2007 Chevrolet Corvette.\\
+Primary Search (fulltext) & \textbf{Query:} \texttt{("the name of the famous dogsledding race held each year in Alaska" OR titleText:\dots)\^{}2.7 +("name" OR titleText:"name")\^{}2.6} \dots \\
+	& \textbf{Found:} List of New Hampshire historical markers \\
+Primary Search (titles) & Name of the Year, Danish Sports Name of the Year, List of organisms named after famous people, Alaska!, Alaska, Race of a Thousand Years \\
+	& \textbf{Sample first passage:} The 2000 Race of a Thousand Years was an endurance race and the final round of the 2000 American Le Mans Series season. \\
+Primary Search (document) & List of New Hampshire historical markers \\ \hline
+
+\textbf{The 2000 Race of a Thousand Years} %
+	& \textbf{Focus:} Race; DBpedia LAT \textit{automobile race}, \textit{auto race in australia}, \textit{new year celebration}, \textit{quantity} LAT \\
+	& Successful type coercion match\textbf{!}, ``sharp'' (exact specific) match\textbf{!} \\
+	& \textbf{occurences:} 1, \textbf{origins:}  first passage, noun phrase, \textbf{other:} adjecent to an LAT clue mention\textbf{!}, containing clue text \\
+\textbf{Iditarod Trail Sled Dog Race} %
+	& \textbf{Focus:} Race; DBpedia LAT \textit{sport}, \textit{sport in alaska}, \textit{alaska}, \textit{winter sport}, \textit{attraction}; (N.B. no \textit{race} LAT) \\
+	& Successful type coercion match, loose match by generalization of \textit{attraction} to \textit{social event}\textbf{!} \\
+	& \textbf{occurences:} 1, \textbf{origins}   passage by various clues, noun phrase,
+	\textbf{other:} suffixed by clue text \\ \hline
+
+Final Answers & The 2000 Race of a Thousand Years (0.97), --01-03 (0.94), List of New Hampshire historical markers (0.93), a binomial name, a "make" (manufacturer) and a "model", in addition to a model year, such as a 2007 Chevrolet Corvette (0.90), \textbf{the Iditarod Trail Sled Dog Race} (0.89), Various races (0.83), \dots \\ \hline
+\end{tabular}
+\vspace*{-0.2cm}
+\caption{A sample of the pipeline process when (not quite correctly) answering a training question. \textbf{!} indicates particularly distinguishing features.}
+\label{fig:exIditarod}
+\end{figure}

@@ -1,50 +1,69 @@
 \chapter{The YodaQA System}
 \label{ch:work}
 
-\begin{figure}[hb]
-\begin{center}
-\resizebox{15cm}{!}{\includegraphics{yodaqa-arch.eps}}
-%\vspace*{-0.75cm}
-\caption{The general architecture of the YodaQA pipeline.  Present but unused final pipeline portions not shown.}
-\label{fig:arch}
-\end{center}
-\end{figure}%\vspace{5mm}
+My work on Question Answering so far has focused largely on building
+a new open source QA platform that is sufficiently generic and modular,
+features modern architecture and can serve both as scientific
+research testbed and a practical system.
+The outcome of this work is the \textbf{YodaQA} system.%
+\footnote{Available open source at \url{https://github.com/brmson/yodaqa}
+under the Apache Software Licence 2.0.}
 
 \section{YodaQA Pipeline Architecture}
 \label{sec:yodaqaarch}
 
-The goals for our system \textbf{brmson{\footnotesize\,\texttrademark{}} YodaQA} are to provide an open source
-Question Answering platform that can serve both as scientific research
-testbed and a practical system. The pipeline is implemented mainly in Java,
-using the popular Apache UIMA framework \citep{UIMA}.  Extensive support
-tooling is included within the package.
+The QA task is implemented in YodaQA as a pipeline that transforms the
+question to a set of answers by applying a variety of analysis engines
+and annotators.
+It is composed from largely independent modules,
+allowing easy extension with better algorithms
+or novel approaches, while as a fundamental principle
+all modules share a common end-to-end pipeline.
+The pipeline is implemented in Java
 
-Unlike OAQA, in YodaQA each artifact (question, search result, passage,
-candidate answer) is represented as a separate UIMA CAS, allowing easy
-parallelization and easy leverage of pre-existing NLP UIMA components;
-we also put emphasis on aggressive compartmentalization
-of different tasks to interchangeable annotators rather than using
-UIMA just for high level flow and annotation storage.
+The YodaQA pipeline is implemented mainly in Java,
+using the Apache UIMA framework. \citep{UIMA}
+YodaQA represents each artifact
+as a separate UIMA CAS, allowing easy
+parallelization and straightforward
+leverage of pre-existing NLP UIMA components;
+as a corollary, we compartmentalize
+different tasks to interchangeable UIMA annotators.
+Extensive support
+tooling is included within the package.
 
 The framework is split in several Java packages: \textbf{io} package takes care
 of retrieving questions and returning answers, \textbf{pipeline} contains
 classes of the general pipeline stages, \textbf{analysis} contains
-modules for various analysis steps, \textbf{provider} has interfaces
-to various external resources and \textbf{flow} carries UIMA helper classes.
+algorithms for the particular analysis steps, \textbf{provider} has interfaces
+to various external resources and \textbf{flow} carries UIMA helper classes
+and a web interface dashboard.
+
+\begin{figure}[hb]
+\begin{center}
+\resizebox{15cm}{!}{\includegraphics{yodaqa-arch.eps}}
+%\vspace*{-0.75cm}
+\caption{The general architecture of the YodaQA pipeline.  Present but unused final pipeline portions not shown.
+TODO: Collapse answer production.  Plot sub-graphs with pipeline pieces in more detail.}
+\label{fig:arch}
+\end{center}
+\end{figure}%\vspace{5mm}
 
 The system maps an input question to ordered list of answer candidates in a pipeline fashion,
 with the flow as in Fig.~\ref{fig:arch}, encompassing the following stages:
 
 \begin{itemize}
-\item \textbf{Question Analysis} extracts natural language features from the question text and produces QA features based on them (clues, type, etc.).
-\item \textbf{Answer Production} generates a set of candidate answers based on the question.
-	Typically, this happens by performing a \textbf{Primary Search} in the knowledge bases according to the question clues,
-	and either directly using search results as candidate answers
-	or filtering relevant passages from these (the \textbf{Passage Extraction})
-	and generating candidate answers from picked passages (the \textbf{Passage Analysis}).
-\item \textbf{Answer Analysis} generates various answer features based on detailed analysis (most importantly, type determination and coercion to question type).
+\item \textbf{Question Analysis} extracts natural language features from
+	the input and produces in-system representations of the question.
+\item \textbf{Answer Production} generates a set of candidate answers based on the question,
+	by performing a \textbf{Primary Search} in the knowledge bases according to the question clues
+	and either directly using the results as candidate answers
+	or selecting the relevant passages (the \textbf{Passage Extraction})
+	and generate candidate answers from these (the \textbf{Passage Analysis}).
+\item \textbf{Answer Analysis} generates answer features based on detailed analysis (most importantly, lexical type determination and coercion to question type).
 \item \textbf{Answer Merging and Scoring} consolidates the set of answers, removing duplicates and using a machine learned classifier to score answers by their features.
-\item \textbf{Successive Refining} (optional) prunes the set of questions in multiple phases, interjecting some extra tasks (evidence diffusion and gathering additional evidence).
+\item \textbf{Successive Refining} (optional) prunes the set of questions in multiple phases, interjecting some extra tasks (evidence diffusion and gathering additional evidence).%
+\footnote{We do not include Successive Refining in our evaluation or include further details as it is not beneficial in our current setup.}
 \end{itemize}
 
 The basic pipeline flow is much inspired by the Deep\-QA model
@@ -56,11 +75,13 @@ the question analysis) are carried through the rest of the flow.
 \section{YodaQA Reference Pipeline}
 \label{sec:yodaqarefpip}
 
-The particular Question Answering problem considered in the reference
-pipeline is finding a precise (narrowly phrased) answer to a naturally
-phrased English question, based on both unstructured (English Wikipedia,
-\textit{enwiki})
-and structured (DBpedia \citep{dbpedia}, Freebase \citep{freebase}) knowledge bases.
+The reference pipeline currently considers an English-language task
+as outlined in the Introduction --- answering open domain
+factoid questions, producing a narrowly phrased answer.
+We base the answers on information retrieval from both
+unstructured (English Wikipedia --- \textit{enwiki})
+and structured (DBpedia \citep{dbpedia}, Freebase \citep{freebase})
+knowledge bases.
 
 In our pipeline, we build on existing third-party NLP analysis tools,
 in particular Stanford CoreNLP (Segmenter, POS-Tagger, Parser) \citep{StanfordCoreNLP} \citep{StanfordNNParser},
@@ -73,28 +94,36 @@ NLP analysis backends are freely interchangeable thanks
 to the DKPro UIMA interface \citep{DKPro}.
 For semantic analysis, we also rely heavily on the WordNet lexicon \citep{WordNet}.
 
-For a practical illustration of the pipeline processing two particular example questions,
-please follow Fig.~\ref{fig:exEnder} and~\ref{fig:exIditarod}.
+Our key design rule is avoidance of hand-crafted rules and heuristics,
+instead relying just on fully-learned universal mechanisms;
+we use just about 10 hard-coded rules at this point, mostly
+in question analysis.
+
+For a practical illustration of the pipeline processing
+two particular example questions,
+see Appendix~\ref{app:analysis}.
 
 
 \subsection{Question Analysis}
 
-During question analysis,
-produce a part-of-speech tagging and dependency parse of the question text,
-recognize named entities and,
-roughly inspired by the DeepQA system \citep{WatsonQuestion},
-heuristically generate several QA features: Clues, Focus, and LAT.
+The question analysis involves
+producing a part-of-speech tagging and dependency parse of the question text,
+recognizing named entities and
+performing entity linking%
+\footnote{Right now, entities are linked just by an exact match of the main or alias label.}
+to concepts (as represented by \textit{enwiki} articles).
+The question representation we produce is similar in spirit
+to DeepQA \cite{WatsonQuestion}: a bag-of-features including
+a set of clues (keywords, keyphrases and linked concepts),
+possible lexical answer types and the selection verb.
 
 \textbf{Clues} represent keywords in the question that determine its content
 and are used to query for candidate answers.
 Clues based on different question components are assigned different weight
 (used in search retrieval and passage extraction, determined empirically) ---
 in ascending other, all noun phrases, noun tokens and the selection verb (SV);
-the LAT (see below);
-named entities;
+the LAT (see below); named entities and matched concepts;
 the question sentence subject (determined by dependency parse).
-If the clue text corresponds to an \textit{enwiki} article name or redirect alias,
-its weight is boosted and it is flagged as a \textbf{concept clue}.
 
 \textbf{Focus} is the center point of the question sentence
 indicating the queried object.
@@ -108,11 +137,16 @@ The LAT is derived from the focus, except question words are mapped to nouns
 (``where'' to ``location'', etc.)
 and adverbs (like ``hot'') are nominalized (to ``temperature'') using WordNet relations.
 
-\subsection{Unstructured Answer Sources}
+\textbf{SV} (Selection Verb) represents the coordinating verb of the
+question that selects the answer with regard to other clues (like ``born'',
+``received'', etc.)
 
-The primary source of answers in our QA system is keyword search in free-text knowledge base,
-in our default setting the \textit{enwiki}.
-While the information has no formal structure, we take advantage of the organization of the \textit{enwiki} corpus
+\subsection{Unstructured Knowledge Bases}
+
+The primary source of answers in our QA system is keyword search in free-text knowledge base
+(the \textit{enwiki} in our default setting).
+While the knowledge base has no formal structure,
+we take advantage of the organization of the \textit{enwiki} corpus
 where entity descriptions are stored in articles that bear the entity name as title
 and the first sentence is typically an informative short description of the entity.
 Our search strategies are analogous to basic DeepQA free-text information retrieval methods \citep{WatsonIR}.
@@ -120,8 +154,8 @@ We use the Apache Solr\footnote{\url{http://lucene.apache.org/solr/}} search eng
 
 \textbf{Title-in-clue search} \citep{WatsonIR} looks for the question clues in the article titles,
 essentially aiming to find articles that describe the concepts touched in the question.
-The first sentence of the top six articles (which we assume is its summary)
-is then used in passage analysis (see below).
+The first sentences of the top six articles (which we assume is its summary)
+are then used in passage analysis (see below).
 
 \textbf{Full-text search} \citep{WatsonIR} runs a full-text clue search in the article texts and titles,
 considering the top six results.
@@ -136,25 +170,36 @@ the top three passages from each document are picked for passage analysis.
 top 20 article hits are then taken as potential responses,
 represented as candidate answers by their titles.
 
-\textbf{Concept search} retrieves articles whose titles (or redirect aliases) exactly match a question clue.
-The first sentence and also passages extracted as in the full-text search are used for passage analysis.
+\textbf{Concept search} retrieves articles that have been linked to entities mentioned in the question.
+The first sentence as well as passages extracted like in the full-text search are used for passage analysis.
 
 Given a picked passage, the \textbf{passage analysis} process executes an NLP pipeline and generates candidate answers;
 currently, the answer extraction strategy entails simply converting all named entities and noun phrases to candidate answers.
 Also, object constituents in sentences where subject is the question LAT are converted to candidate answers.
 
-\subsection{Structured Answer Sources}
+\subsection{Structured Knowledge Bases}
 
 Aside of full-text search, we also employ structured knowledge bases organized in RDF triples;
-for each concept clue, we query for predicates with this clue as a subject
+in particular, we query the DBpedia \texttt{ontology} (curated) and \texttt{property} (raw infobox)
+namespaces and the Freebase RDF dump.
+
+For each concept
+linked to an in-question entity, we query for predicates with this concept as a subject%
+\footnote{All our knowledge bases are linked to \textit{enwiki}.}
 and generate candidate answers for each object in such a triple, with the predicate label seeded as one LAT of the answer.
 
-In particular, we query the DBpedia \texttt{ontology} (curated) and \texttt{property} (raw infobox)
-namespaces and the Freebase RDF dump.
-For performance reasons, we limit the number of queried Freebase topics to 5 and retrieve only 40 properties per each;
-due to this limitation, we have manually compiled a blacklist of skipped
-``spammy'' properties based on past system behavior analysis
-(e.g.\ location's \textit{people\_born\_here} or music artist's \textit{track}).
+%For performance reasons, we limit the number of queried Freebase topics to 5 and retrieve only 40 properties per each;
+%due to this limitation, we have manually compiled a blacklist of skipped
+%``spammy'' properties based on past system behavior analysis
+%(e.g.\ location's \textit{people\_born\_here} or music artist's \textit{track}).
+
+Furthermore, we have trained a multi-label classifier (logistic regression)
+that predicts \textit{property paths}
+likely connecting an identified in-question concept with the answer in the knowledge base
+graph based on particular forms in question representation. \cite{LeanFreebaseYao}
+Unlike \cite{LeanFreebaseYao}, we consider long property paths as
+Freebase is organized such that finding related concepts
+often requires traversing intermediate nodes representing relationshibs (e.g.\ siblinghood).
 
 \subsection{Answer Analysis}
 
@@ -200,7 +245,9 @@ and a value normalized over the full set of answers
 so that the distribution of the feature values over the answer
 has mean 0 and standard deviation 1.
 The extended feature vectors are converted to a score $s \in [0,1]$
-using a logistic regression classifier.
+using a logistic regression classifier.%
+\footnote{An alternative gradient-boosted decision forest classifier is also
+	available, but it is not beneficial in the default evaluation scenario yet.}
 The weight vector is trained on the gold standard of a training dataset,
 employing L2 regularization objective.  To strike a good precision-recall
 balance, positive answers (which are about $p=0.03$ portion of the total)
@@ -247,7 +294,7 @@ impact of its various components (hold-out testing).
 
 Our code is version tracked in a public GitHub repository
 \url{https://github.com/brmson/yodaqa}, and the experiments presented
-here are based on commit \texttt{f6c0cf6} (tagged as \texttt{v1.0}).
+here are based on commit \texttt{TODO} (tagged as \texttt{v1.1}).
 The quality of full-text search is co-determined by Solr version
 (we use 4.6.0) and models of the various NLP components which are brought
 in by DKPro version 1.7.0.
@@ -257,7 +304,20 @@ Detailed instructions on setting up the same state locally (including
 download of the particular dump versions and configuration files) are
 distributed along the source code.
 
-As a benchmark of the system performance, we use a dataset of 430 training
+An automatic benchmark evaluation system is distributed as part of the
+YodaQA software package.  The system evaluates the training and test questions
+in parallel and re-trains the machine learning models before scoring the answers.
+Therefore, in all the modified system versions considered below, a model trained
+specifically for that version is used for scoring answers.
+
+Our benchmark is influenced by two sources of noise.
+First, the answer correctness is determined automatically by matching a predefined regex,
+but this may yield both false positives and false negatives.%
+\footnote{For example numerical quantities with varying formatting and units are notoriously tricky to match by a regular expression.}
+Second, during training the models are randomly initialized and therefore their final
+performance on a testing set flutters a little.
+
+As a main benchmark of the system performance, we use a dataset of 430 training
 and 430 testing open domain factoid questions.
 (For system development, exclusively questions from the training set are used.)
 This dataset is based on the public question answering benchmark from
@@ -273,20 +333,17 @@ We refer to the resulting 867 question dataset as \texttt{curated} and
 randomly split it to the training and testing sets.\footnote{The remaining
 7 questions are left unused for now.}
 
-An automatic benchmark evaluation system is distributed as part of the
-YodaQA software package.  The system evaluates the training and test questions
-in parallel and re-trains the machine learning models before scoring the answers.
-Therefore, in all the modified system versions considered below, a model trained
-specifically for that version is used for scoring answers.
-
-Our benchmark is influenced by two sources of noise.
-First, the answer correctness is determined automatically by matching a predefined regex,
-but this may yield both false positives and false negatives.%
-\footnote{For example numerical quantities with varying formatting and units are notoriously tricky to match by a regular expression.}
-Second, during training the models are randomly initialized and therefore their final
-performance on a testing set flutters a little.
+To further facilitate comparison of YodaQA to other systems,
+we also benchmark its performance on the (i) original, unrevised and
+unabridged TREC datasets
+(even though the train/test splits might not be entirely compatible),
+and (ii) the WebQuestions dataset \cite{WebQuestions}
+(which represents several thousands of open domain factoid questions
+tied to Freebase, popular as a semantic parsing benchmark).
 
 \subsection{Benchmark Results}
+
+TODO FIXME XXX
 
 \begin{figure}[t]
 % increase table row spacing, adjust to taste
@@ -411,15 +468,6 @@ a significant restriction upon the general end-to-end QA pipeline.
 
 \section{System Performance}
 
-On the test set of the \texttt{factoid-curated} v1 dataset,
-the system achieved \textbf{accura\-cy-at-one of 32.6\%}.
-	When we consider all the generated answers,
-	the \textbf{recall is 79.3\%} (\textbf{F1 46.2\%}),
-	\textbf{accuracy-at-five is 52.7\%}
-	and the correct question \textbf{mean reciprocal rank is 0.420}.%
-\footnote{The system was configured to take 30s per answer
-on average without caching (most of it is spent in IR and dependency parsing of passages)
-on the author's machine; longer-time configurations can further improve the performance.}
 In Fig.~\ref{fig:bench}, we compare various performance measures
 with the most relevant previously published systems
 (on the TREC dataset, as reported in the respective papers),
@@ -445,85 +493,4 @@ OQA \citep{OQA} (modern fully-learned OSS) & & & 29\%$^{**}$ & \\ \hline
 $^*$ answer-bearing sentence retrieval\quad
 $^{**}$ sub-sampled dataset with manual evaluation}
 \label{fig:bench}
-\end{figure}
-
-
-\begin{figure}[t!]
-% increase table row spacing, adjust to taste
-\renewcommand{\arraystretch}{1.3}
-\centering
-\footnotesize
-\begin{tabular}{|p{1.8cm}p{6cm}|}
-\hline
-Question Text & Who wrote Ender's Game? \\
-Q. Analysis & \textbf{Focus:} who; \textbf{SV:} wrote; \textbf{LAT:} person \\
-Question Clues & Ender's Game \textbf{(concept clue)}, wrote \\ \hline
-
-Primary Search (DBpOnt.) & \textbf{author:} Orson Scott Card, \textbf{publisher:} Tor Books, \dots \\
-Primary Search (DBpProp.) & (ibid), \textbf{cover artist:} John Harris, \textbf{Caption:} 2005, \dots \\
-Primary Search (Freebase) & \textbf{Author} Orson Scott Card, \textbf{Characters} Valentine Wiggin, Hive Queen, \dots \\
-Primary Search (concepts) & \textit{enwiki} Ender's Game \\
-Primary Search (fulltext) %
-	& \textbf{Query:} \texttt{+("wrote" OR titleText: "wrote")\^{}1.0 +("ender's Game" OR titleText:"ender's Game")\^{}1.1  ("wrote ender's Game "\textasciitilde4)\^{}2.1} \dots \\
-	& \textbf{Found:} Ender's Game (series), Ender's Game, Ender's Game (film), Ender's Game (comics), Jane (Ender's Game), List of Ender's Game series planets \\
-	& \textbf{Sample picked passages:} {\footnotesize Elaborating on characters and plot lines depicted in the novel, Card later wrote additional books to form the Ender's Game series.} \\
-	& \dots {\footnotesize Valentine wrote an essay here comparing the priestly class to the skeletons of small vertebrates some time before Speaker for The Dead.} \\
-Primary Search (titles) & Ender's Game, List of Ender's Game characters, Jane (Ender's Game), Ender's Game (short story), Ender's Game (film), Ender's Game (series) \\
-	& \textbf{Sample first passage:} {\footnotesize "Ender's Game" is a 1985 military science fiction novel by American author Orson Scott Card.} \\
-Primary Search (document) & Ender's Game (series), Elisabeth Hirsch, Orson Scott Card, Ender in Exile, Worthing Inn, Jane (Ender's Game), \dots \\ \hline
-
-\textbf{Orscon Scott Card} & Structured primary search LAT \textit{author} (Wordnet hypernyms \textit{communicator}, \textit{person}, \textit{maker}, \textit{creator}); DBpedia LAT \textit{writer} (Wordnet hypernyms \textit{communicator}, \textit{person}); NER LAT \textit{person} \\
-	& Successful type coercion match\textbf{!}, ``sharp'' (exact specific) match from NER LAT\textbf{!} \\
-	& \textbf{occurences:} 19\textbf{!}, \textbf{origins:} document title, concept\textbf{!}, first passage, noun phrase, named entity, multiple origins, \textbf{other:} adjecent to a concept clue mention, no clue text overlap\textbf{!} \\
-\textbf{Jane} & Structured primary search LAT \textit{character} (Wordnet hypernyms \textit{imaginary being}, \textit{creativity}, \textit{person}, \textit{message} and 36 others); NER LAT \textit{person} \\
-	& Successful type coercion match\textbf{!}, ``sharp'' (exact specific) match from NER LAT\textbf{!} \\
-	& \textbf{occurences:} 4, \textbf{origins} document title, first passage, noun phrase, named entity, multiple origins,
-	\textbf{other:} no clue text overlap\textbf{!} \\ \hline
-
-Final Answers & \textbf{Orson Scott Card} (0.99), Neal Shusterman (0.96), Elisabeth Hirsch (0.96), American author Orson Scott Card (0.96), \dots, List of Ender's Game series planets (0.94), Gavin Hood (0.94), Print (0.93), Jane (0.91), \dots \\ \hline
-\end{tabular}
-\vspace*{-0.2cm}
-\caption{A sample of the pipeline process when (correctly) answering a training question. \textbf{!} indicates particularly distinguishing features.}
-\label{fig:exEnder}
-\end{figure}
-
-\begin{figure}[t!]
-% increase table row spacing, adjust to taste
-\renewcommand{\arraystretch}{1.3}
-\centering
-\footnotesize
-\begin{tabular}{|p{1.8cm}p{6cm}|}
-\hline
-Question Text & What is the name of the famous dogsledding race held each year in Alaska? \\
-Q. Analysis & \textbf{Focus:} name; \textbf{SV:} held; \textbf{LAT:} race
-	(by Wordnet hypernym: \textit{contest}, \textit{event}, \textit{biological group}, \textit{canal} and 9 others) \\
-Question Clues & name, Alaska \textbf{(concept clues)}, race, held, famous, dogsledding, race, year \\ \hline
-
-Primary Search (DBpOnt.) & \textbf{area Total:} 1717854.0, \textbf{country:} United States, \dots \\
-Primary Search (DBpProp.) & (ibid), \textbf{West:} Chukotka, \textbf{Income Rank:} 4, \dots \\
-Primary Search (Freebase) & \textbf{Date Founded} 1959-01-03, \textbf{Capital} Juneau, \dots \\
-Primary Search (concepts) & \textit{enwiki} Alaska, Name \\
-	& \textbf{Sample picked passages:} Various races are held around the state, but the best known is the Iditarod Trail Sled Dog Race, a 1150 mi trail from Anchorage to Nome (although the distance varies from year to year, the official distance is set at 1049 mi). \\
-	& \dots Automobiles typically have a binomial name, a "make" (manufacturer) and a "model", in addition to a model year, such as a 2007 Chevrolet Corvette.\\
-Primary Search (fulltext) & \textbf{Query:} \texttt{("the name of the famous dogsledding race held each year in Alaska" OR titleText:\dots)\^{}2.7 +("name" OR titleText:"name")\^{}2.6} \dots \\
-	& \textbf{Found:} List of New Hampshire historical markers \\
-Primary Search (titles) & Name of the Year, Danish Sports Name of the Year, List of organisms named after famous people, Alaska!, Alaska, Race of a Thousand Years \\
-	& \textbf{Sample first passage:} The 2000 Race of a Thousand Years was an endurance race and the final round of the 2000 American Le Mans Series season. \\
-Primary Search (document) & List of New Hampshire historical markers \\ \hline
-
-\textbf{The 2000 Race of a Thousand Years} %
-	& \textbf{Focus:} Race; DBpedia LAT \textit{automobile race}, \textit{auto race in australia}, \textit{new year celebration}, \textit{quantity} LAT \\
-	& Successful type coercion match\textbf{!}, ``sharp'' (exact specific) match\textbf{!} \\
-	& \textbf{occurences:} 1, \textbf{origins:}  first passage, noun phrase, \textbf{other:} adjecent to an LAT clue mention\textbf{!}, containing clue text \\
-\textbf{Iditarod Trail Sled Dog Race} %
-	& \textbf{Focus:} Race; DBpedia LAT \textit{sport}, \textit{sport in alaska}, \textit{alaska}, \textit{winter sport}, \textit{attraction}; (N.B. no \textit{race} LAT) \\
-	& Successful type coercion match, loose match by generalization of \textit{attraction} to \textit{social event}\textbf{!} \\
-	& \textbf{occurences:} 1, \textbf{origins}   passage by various clues, noun phrase,
-	\textbf{other:} suffixed by clue text \\ \hline
-
-Final Answers & The 2000 Race of a Thousand Years (0.97), --01-03 (0.94), List of New Hampshire historical markers (0.93), a binomial name, a "make" (manufacturer) and a "model", in addition to a model year, such as a 2007 Chevrolet Corvette (0.90), \textbf{the Iditarod Trail Sled Dog Race} (0.89), Various races (0.83), \dots \\ \hline
-\end{tabular}
-\vspace*{-0.2cm}
-\caption{A sample of the pipeline process when (not quite correctly) answering a training question. \textbf{!} indicates particularly distinguishing features.}
-\label{fig:exIditarod}
 \end{figure}
