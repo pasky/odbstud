@@ -341,9 +341,11 @@ and (ii) the WebQuestions dataset \cite{WebQuestions}
 (which represents several thousands of open domain factoid questions
 tied to Freebase, popular as a semantic parsing benchmark).
 
-\subsection{Benchmark Results}
+\subsection{System Evaluation}
 
 TODO FIXME XXX
+
+TODO re-measure
 
 \begin{figure}[t]
 % increase table row spacing, adjust to taste
@@ -353,65 +355,16 @@ TODO FIXME XXX
 \hline
 Pipeline & IR Recall & Precision-at-1 & MRR & time \\ \hline \hline
 default & 79.3\% & 32.6\% & 0.420 & 28.8s \\
-% test  1119b6c 2015-03-09 Merge branch 'master... 144/289/430 33.5%/67.2% avgscore 0.504 mrr 0.424 avgtime 283643.667	+uv +uv
-% test u1119b6c 2015-03-09 Merge branch 'master... 140/341/430 32.6%/79.3% avgscore 0.602 mrr 0.420 avgtime 283440.296
-% test v1119b6c 2015-03-09 Merge branch 'master... 138/290/430 32.1%/67.4% avgscore 0.503 mrr 0.417 avgtime 283569.631
 \hline
 full-text scaling ($6\to12$ fetched results) & 82.3\% & 34.0\% & 0.430 & 50.0s \\
-% test  e8e2f7b 2015-03-21 SolrFullPrimarySearc... 133/295/430 30.9%/68.6% avgscore 0.512 mrr 0.418 avgtime 12260.108	uv+ uv+
-% test ue8e2f7b 2015-03-21 SolrFullPrimarySearc... 146/354/430 34.0%/82.3% avgscore 0.630 mrr 0.430 avgtime 11980.825
-% test ve8e2f7b 2015-03-21 SolrFullPrimarySearc... 135/297/430 31.4%/69.1% avgscore 0.519 mrr 0.425 avgtime 12168.474
-
-passage scaling ($3\to6$ picked passages) & 81.2\% & 31.4\% & 0.415 & 43.5s \\
-% test  e1b3c91 2015-03-21 PassFilter: NUM_PICK... 137/296/430 31.9%/68.8% avgscore 0.509 mrr 0.419 avgtime 10368.150	v+u
-% test ue1b3c91 2015-03-21 PassFilter: NUM_PICK... 135/349/430 31.4%/81.2% avgscore 0.616 mrr 0.415 avgtime 10088.654
-% test ve1b3c91 2015-03-21 PassFilter: NUM_PICK... 146/294/430 34.0%/68.4% avgscore 0.516 mrr 0.432 avgtime 10275.724
-
-document search scaling ($20\to40$) & 80.0\% & 31.6\% & 0.418 & 34.9s \\
-% test  d8debbd 2015-03-21 SolrDocPrimarySearch... 135/292/430 31.4%/67.9% avgscore 0.499 mrr 0.410 avgtime 10859.761	u+v u+v
-% test ud8debbd 2015-03-21 SolrDocPrimarySearch... 136/344/430 31.6%/80.0% avgscore 0.604 mrr 0.418 avgtime 10649.831
-% test vd8debbd 2015-03-21 SolrDocPrimarySearch... 134/291/430 31.2%/67.7% avgscore 0.501 mrr 0.410 avgtime 10787.752
-
 freebase scaling ($5\to10$ topics, $40\to80$ properties) & 79.8\% & 31.6\% & 0.416 & 29.8s \\
-% test  6475b89 2015-03-22 FreebaseOntology: TO... 136/290/430 31.6%/67.4% avgscore 0.499 mrr 0.412 avgtime 6985.841
-% test u6475b89 2015-03-22 FreebaseOntology: TO... 136/343/430 31.6%/79.8% avgscore 0.603 mrr 0.416 avgtime 6782.731
-% test v6475b89 2015-03-22 FreebaseOntology: TO... 140/290/430 32.6%/67.4% avgscore 0.504 mrr 0.418 avgtime 6913.904
-
+naive web search integration (Bing-returned snippets) & & & & \\
 \hline
 full-text hold-out & 49.5\% & 20.9\% & 0.277 & 5.8s \\
-% test  cb27e81 2015-03-20 Merge branch 'master... 80/188/430 18.6%/43.7% avgscore 0.307 mrr 0.252 avgtime 1675.430	uv+
-% test ucb27e81 2015-03-20 Merge branch 'master... 90/213/430 20.9%/49.5% avgscore 0.358 mrr 0.277 avgtime 1464.086
-% test vcb27e81 2015-03-20 Merge branch 'master... 86/189/430 20.0%/44.0% avgscore 0.315 mrr 0.263 avgtime 1580.048
-
 structured hold-out & 73.5\% & 29.1\% & 0.376 & 23.8s \\
-% test  0659767 2015-03-20 YodaQA: Experimental... 113/265/430 26.3%/61.6% avgscore 0.448 mrr 0.362 avgtime 5443.057	uv+	vu+
-% test u0659767 2015-03-20 YodaQA: Experimental... 125/316/430 29.1%/73.5% avgscore 0.546 mrr 0.376 avgtime 5261.876
-% test v0659767 2015-03-20 YodaQA: Experimental... 125/267/430 29.1%/62.1% avgscore 0.461 mrr 0.380 avgtime 5371.852
-
 type coercion hold-out & 79.3\% & 22.1\% & 0.314 & 30.0s \\
-% test  a458fbf 2015-03-20 AnswerAnalysis: Expe... 90/246/430 20.9%/57.2% avgscore 0.388 mrr 0.304 avgtime 7249.693	uv+
-% test ua458fbf 2015-03-20 AnswerAnalysis: Expe... 95/341/430 22.1%/79.3% avgscore 0.520 mrr 0.314 avgtime 7042.305
-% test va458fbf 2015-03-20 AnswerAnalysis: Expe... 91/246/430 21.2%/57.2% avgscore 0.395 mrr 0.310 avgtime 7177.386
-
 concept clues hold-out & 67.9\% & 23.0\% & 0.314 & 25.6s \\
-% test  fdf189d 2015-03-20 QuestionAnalysis: Ex... 100/248/430 23.3%/57.7% avgscore 0.399 mrr 0.319 avgtime 6356.564	v+u
-% test ufdf189d 2015-03-20 QuestionAnalysis: Ex... 99/292/430 23.0%/67.9% avgscore 0.490 mrr 0.314 avgtime 6104.581
-% test vfdf189d 2015-03-20 QuestionAnalysis: Ex... 100/247/430 23.3%/57.4% avgscore 0.403 mrr 0.322 avgtime 6258.929
-
-%external-resource LATs hold-out & 79.3\% & 22.1\% & 0.314 & 20.1s \\
-% test  fe1b2e8 2015-03-20 AnswerAnalysis: Expe... 87/245/430 20.2%/57.0% avgscore 0.383 mrr 0.298 avgtime 5058.735	uv+
-% test ufe1b2e8 2015-03-20 AnswerAnalysis: Expe... 95/341/430 22.1%/79.3% avgscore 0.520 mrr 0.314 avgtime 4888.693
-% test vfe1b2e8 2015-03-20 AnswerAnalysis: Expe... 87/245/430 20.2%/57.0% avgscore 0.387 mrr 0.301 avgtime 4993.441
-
-%fuzzy merging and evidence diffusion hold-out % & ...
-% test  acbd992 2015-03-20 YodaQA pipeline: Exp... 129/290/430 30.0%/67.4% avgscore 0.497 mrr 0.405 avgtime 7364.049	uv+
-% test uacbd992 2015-03-20 YodaQA pipeline: Exp... 139/341/430 32.3%/79.3% avgscore 0.602 mrr 0.420 avgtime 7131.604
-% test vacbd992 2015-03-20 YodaQA pipeline: Exp... 135/290/430 31.4%/67.4% avgscore 0.503 mrr 0.413 avgtime 7276.565
-
 clue overlap test hold-out & 79.3\% & 29.5\% & 0.390 & 30.1s \\
-% test  65f5635 2015-03-20 AnswerAnalysis: Expe... 138/291/430 32.1%/67.7% avgscore 0.496 mrr 0.413 avgtime 7624.839	v+u
-% test u65f5635 2015-03-20 AnswerAnalysis: Expe... 127/341/430 29.5%/79.3% avgscore 0.587 mrr 0.390 avgtime 7421.990
-% test v65f5635 2015-03-20 AnswerAnalysis: Expe... 138/293/430 32.1%/68.1% avgscore 0.502 mrr 0.416 avgtime 7552.017
 \hline
 \end{tabular}
 \vspace*{-0.2cm}
@@ -429,48 +382,36 @@ MRR is the Mean Reciprocal Rank $|Q|\cdot\sum_{q\in Q}{1/r_q}$, time is the aver
 \end{center}
 \end{figure}%\vspace{5mm}
 
-Benchmark results over various pipeline configurations are laid out in Fig.~2. %\ref{fig:bench}.
+Benchmark results over various pipeline configurations are laid out in Fig.~\ref{fig:ranks}.
 Aside of the general performance of the system,
 it is instructive to look at the histogram of answer ranks
 for the default pipeline, shown in Fig.~\ref{fig:ranks}.
-We can observe that while precision-at-one is 32.6\%,
-precision-at-five is already at 52.7\% of test questions.
+We can observe that while precision-at-one is TODO,
+precision-at-five is already at TODO of test questions.
 
 The information retrieval parameters of the default pipeline are selected so
-that answering a question takes about 30s on average on a single core of
-AMD FX-8350 with 24GB RAM and SSD backed databases.
-(Note that no computation pre-processing was done on the knowledge bases or datasets;
+that answering a question takes about 10s on average on a single core of
+AMD FX-8350 with 24GB RAM and SSD backed databases.%
+\footnote{Note that no computation pre-processing was done on the knowledge bases or datasets;
 bulk of the time per question is therefore spent querying the search engine and parsing sentences,
-making it an accurate representation of time spent on previously unseen questions.)
+making it an accurate representation of time spent on previously unseen questions.}
 By raising the limiting
-parameters, we can observe further IR recall increase, and in case of considering
-more full-text search results, also a solid precision improvement.  Our system
-could therefore meaningfully make use of further computing resources.
+parameters, we can observe further IR recall increase and a solid precision improvement.
+Our system could therefore meaningfully make use of further computing resources.
 
 We also benchmarked performance with various components of the pipeline
 disabled.  We can see that the full-text and structured knowledge bases
 are complementary to a degree, but the full-text base is eventually
-a much stronger answer source for our system.  Type coercion and detection
+a much stronger answer source for our system on the open domain factoid
+questions of the \texttt{curated} dataset.  Type coercion and detection
 of the concept clues in the question are both important heuristics for
 our QA system.
 
-Comparison of performance across multiple systems is currently non-trivial,
-unfortunately, as there is no universally agreed experimental setup so far
-and not even published results on the TREC datasets
-from the years we use are readily available.
-OpenEphyra seemed to typically achieve precision-at-one of ``above 25\%'' on
-the TREC datasets including our years according to \citep{Ephyra2006}.
-In the Answer Sentence Selection task \citep{WangQAGrammar},
-Jacana and similar textual entaliement systems are reported%
-\footnote{See the \textbf{ACL Wiki} topic \textit{Question Answering (State of the art)}.}
-to achieve MRR around 0.750 but this task represents
-a significant restriction upon the general end-to-end QA pipeline.
+\subsection{Comparison to Other Systems}
 
-\section{System Performance}
-
-In Fig.~\ref{fig:bench}, we compare various performance measures
+In Fig.~\ref{fig:trecbench}, we compare various performance measures
 with the most relevant previously published systems
-(on the TREC dataset, as reported in the respective papers),
+on the TREC dataset, as reported in the respective papers,
 with ours benchmarked on non-curated version of the TREC 2002, 2003 dataset test split.
 
 \begin{figure}[t]
@@ -485,7 +426,7 @@ AskMSR \citep{AskMSR} (web-search system) & 61.4\% & & & 0.507 \\ \hline
 OpenEphyra \citep{Ephyra2006} (hand-crafted OSS) & ``above 25\%'' & & & \\
 JacanaIR \citep{TreeEditIR2013Yao} (modern fully-learned OSS) & & & & 0.299$^*$ \\
 OQA \citep{OQA} (modern fully-learned OSS) & & & 29\%$^{**}$ & \\ \hline
-\textbf{YodaQA v1.0} & 25.1\% & 62.2\% & 35.8\% & 0.323 \\
+\textbf{YodaQA v1.1} &  &  &  &  \\
 \hline
 \end{tabular}
 \vspace*{-0.2cm}
@@ -493,4 +434,27 @@ OQA \citep{OQA} (modern fully-learned OSS) & & & 29\%$^{**}$ & \\ \hline
 $^*$ answer-bearing sentence retrieval\quad
 $^{**}$ sub-sampled dataset with manual evaluation}
 \label{fig:bench}
+\end{figure}
+
+In Fig.~\ref{fig:wqbench}, we compare ourselves with other published systems
+on the WebQuestions dataset (test split), as reported in their respective papers.
+
+\begin{figure}[t]
+%% increase table row spacing, adjust to taste
+%\renewcommand{\arraystretch}{1.3}
+\centering
+\begin{tabular}{|c|ccc|}
+\hline
+System & Precision-at-1 & F1 (Berant) & MRR \\ \hline
+\textsc{Sempre} (2013) & & & \\
+\textsc{Sempre} (2014) & & & \\
+\textsc{Paralex} (2014) & & & \\
+JacanaFB & & & & \\
+OQA \citep{OQA} & & & & \\ \hline
+\textbf{YodaQA v1.1} & & & & \\
+\hline
+\end{tabular}
+\vspace*{-0.2cm}
+\caption{Benchmark results of other published systems on the WebQuestions dataset.}
+\label{fig:wqbench}
 \end{figure}
