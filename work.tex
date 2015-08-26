@@ -277,9 +277,9 @@ As we present performance analysis of our system,
 we shall first detail our experimental setup;
 this also includes discussion of our question dataset.
 
-Then, we proceed with the actual results --- we measure the \textit{recall}
+Then, we proceed with the actual results --- we measure the \textit{IR recall}
 of the system (whether a correct answer has been generated and considered,
-without regard to its score) and \textit{accuracy-at-one} (whether the
+without regard to its score) and \textit{precision-at-one} (whether the
 correct answer has been returned as the top answer by the system).
 We find this preferrable to typical information retrieval measures like MRR or MAP
 since in many applications, eventually only the single top answer output by the system
@@ -351,7 +351,7 @@ TODO FIXME XXX
 \centering
 \begin{tabular}{|c|cccc|}
 \hline
-Pipeline & Recall & Accuracy-at-1 & MRR & time \\ \hline \hline
+Pipeline & IR Recall & Precision-at-1 & MRR & time \\ \hline \hline
 default & 79.3\% & 32.6\% & 0.420 & 28.8s \\
 % test  1119b6c 2015-03-09 Merge branch 'master... 144/289/430 33.5%/67.2% avgscore 0.504 mrr 0.424 avgtime 283643.667	+uv +uv
 % test u1119b6c 2015-03-09 Merge branch 'master... 140/341/430 32.6%/79.3% avgscore 0.602 mrr 0.420 avgtime 283440.296
@@ -433,8 +433,8 @@ Benchmark results over various pipeline configurations are laid out in Fig.~2. %
 Aside of the general performance of the system,
 it is instructive to look at the histogram of answer ranks
 for the default pipeline, shown in Fig.~\ref{fig:ranks}.
-We can observe that while accuracy-at-one is 32.6\%,
-accuracy-at-five is already at 52.7\% of test questions.
+We can observe that while precision-at-one is 32.6\%,
+precision-at-five is already at 52.7\% of test questions.
 
 The information retrieval parameters of the default pipeline are selected so
 that answering a question takes about 30s on average on a single core of
@@ -443,8 +443,8 @@ AMD FX-8350 with 24GB RAM and SSD backed databases.
 bulk of the time per question is therefore spent querying the search engine and parsing sentences,
 making it an accurate representation of time spent on previously unseen questions.)
 By raising the limiting
-parameters, we can observe further recall increase, and in case of considering
-more full-text search results, also a solid accuracy improvement.  Our system
+parameters, we can observe further IR recall increase, and in case of considering
+more full-text search results, also a solid precision improvement.  Our system
 could therefore meaningfully make use of further computing resources.
 
 We also benchmarked performance with various components of the pipeline
@@ -458,7 +458,7 @@ Comparison of performance across multiple systems is currently non-trivial,
 unfortunately, as there is no universally agreed experimental setup so far
 and not even published results on the TREC datasets
 from the years we use are readily available.
-OpenEphyra seemed to typically achieve accuracy-at-one of ``above 25\%'' on
+OpenEphyra seemed to typically achieve precision-at-one of ``above 25\%'' on
 the TREC datasets including our years according to \citep{Ephyra2006}.
 In the Answer Sentence Selection task \citep{WangQAGrammar},
 Jacana and similar textual entaliement systems are reported%
@@ -479,7 +479,7 @@ with ours benchmarked on non-curated version of the TREC 2002, 2003 dataset test
 \centering
 \begin{tabular}{|c|cccc|}
 \hline
-System & Accuracy-at-1 & Recall & F1 & MRR \\ \hline
+System & Precision-at-1 & IR Recall & F1 & MRR \\ \hline
 LLCpass03 \citep{LCC} (hand-crafted system) & 68.5\% & & & \\
 AskMSR \citep{AskMSR} (web-search system) & 61.4\% & & & 0.507 \\ \hline
 OpenEphyra \citep{Ephyra2006} (hand-crafted OSS) & ``above 25\%'' & & & \\
