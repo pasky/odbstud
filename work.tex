@@ -39,12 +39,11 @@ algorithms for the particular analysis steps, \textbf{provider} has interfaces
 to various external resources and \textbf{flow} carries UIMA helper classes
 and a web interface dashboard.
 
-\begin{figure}[hb]
+\begin{figure}[ht]
 \begin{center}
 \resizebox{15cm}{!}{\includegraphics{yodaqa-arch.eps}}
 %\vspace*{-0.75cm}
-\caption{The general architecture of the YodaQA pipeline.  Present but unused final pipeline portions not shown.
-TODO: Collapse answer production.  Plot sub-graphs with pipeline pieces in more detail.}
+\caption{The general architecture of the YodaQA pipeline.  Present but unused final pipeline portions not shown.}
 \label{fig:arch}
 \end{center}
 \end{figure}%\vspace{5mm}
@@ -104,9 +103,18 @@ two particular example questions,
 see Appendix~\ref{app:analysis}.
 
 
+\begin{figure}[hb]
+\begin{center}
+\resizebox{15cm}{!}{\includegraphics{question-analysis.eps}}
+%\vspace*{-0.75cm}
+\caption{The general organization of the Question Analysis.}
+\label{fig:arch-qa}
+\end{center}
+\end{figure}%\vspace{5mm}
+
 \subsection{Question Analysis}
 
-The question analysis involves
+The question analysis (Fig.~\ref{fig:arch-qa}) involves
 producing a part-of-speech tagging and dependency parse of the question text,
 recognizing named entities and
 performing entity linking%
@@ -141,6 +149,15 @@ and adverbs (like ``hot'') are nominalized (to ``temperature'') using WordNet re
 question that selects the answer with regard to other clues (like ``born'',
 ``received'', etc.)
 
+\begin{figure}[hb]
+\begin{center}
+\resizebox{15cm}{!}{\includegraphics{answer-production.eps}}
+%\vspace*{-0.75cm}
+\caption{The general organization of the Answer Producer component --- multiple strategies that generate large amount of answer hypotheses.}
+\label{fig:arch-ap}
+\end{center}
+\end{figure}%\vspace{5mm}
+
 \subsection{Unstructured Knowledge Bases}
 
 The primary source of answers in our QA system is keyword search in free-text knowledge base
@@ -151,6 +168,7 @@ where entity descriptions are stored in articles that bear the entity name as ti
 and the first sentence is typically an informative short description of the entity.
 Our search strategies are analogous to basic DeepQA free-text information retrieval methods \citep{WatsonIR}.
 We use the Apache Solr\footnote{\url{http://lucene.apache.org/solr/}} search engine (frontend to Apache Lucene).
+They are shown as the non-highlighted components in Fig.~\ref{fig:arch-ap}.
 
 \textbf{Title-in-clue search} \citep{WatsonIR} looks for the question clues in the article titles,
 essentially aiming to find articles that describe the concepts touched in the question.
@@ -182,6 +200,7 @@ Also, object constituents in sentences where subject is the question LAT are con
 Aside of full-text search, we also employ structured knowledge bases organized in RDF triples;
 in particular, we query the DBpedia \texttt{ontology} (curated) and \texttt{property} (raw infobox)
 namespaces and the Freebase RDF dump.
+They are shown as the highlighted components in Fig.~\ref{fig:arch-ap}.
 
 For each concept
 linked to an in-question entity, we query for predicates with this concept as a subject%

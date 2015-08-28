@@ -10,10 +10,10 @@ $(BBL): $(BIB)
 	bibtex odbstud || :
 	$(TEX) odbstud
 
-odbstud.pdf: odbstud.tex ranks.eps yodaqa-arch.eps $(BBL)
+odbstud.pdf: odbstud.tex ranks.eps yodaqa-arch.eps answer-production.eps question-analysis.eps $(BBL)
 	$(TEX) odbstud
 
-ranks.eps: ranks.gle
+ranks.eps: ranks.gle ranks.dat
 	gle -cairo ranks.gle
 
 clean:
