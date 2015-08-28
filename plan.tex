@@ -1,4 +1,107 @@
 \chapter{Future Work}
 \label{ch:plan}
 
-TODO
+Ultimately, the goal of building a Question Answering system would
+be a machine that can answer any kind of question a human could (or more).
+But given the current state of art, I propose to consider this out of
+scope as a doctoral thesis topic.  Instead, I shall propose two particular
+real world QA scenarios that are inspired by real world applications.
+Equipped with this vision and a baseline system of my own making,
+I shall consider the scientific questions that we need
+to answer in order to do well in these scenarios.  I want to propose
+answering some of these questions to be the major focus of my thesis.
+
+The first scenario involves answering \textbf{movie questions}
+about metadata of films and TV series (credits, characters, dates,
+awards, etc.).  This represents a proxy for answering questions about
+product or company databases and many other business tasks.  The domain
+is closed, but familiar to most users and with readily available knowledge
+bases.  We already collected few hundred movie related questions as a dataset
+and are working on YodaQA version for answering movie questions.%
+\footnote{\texttt{d/movies} branch in the YodaQA Git repository.}
+
+The second scenario aims to answer \textbf{prospectus questions}
+about contents of an isolated document like a product page,
+real estate offer or a usage manual.  Unlike the TODO \cite{MemNet},
+the focus of this task is not answering logical riddles or following
+through with a story, but rather entity recognition and relationship
+extraction.
+
+Both my proposals aim at realistic user interaction,
+which brings in the first question ---
+\textbf{How to link question keywords to appropriate concepts?}
+That is, building a dataset and highly accurate solution for entity
+linking (as surveyed in Sec.~\ref{sec:entitylink}.
+Preliminary results on the movies dataset show that spelling mismatches
+(both typos and interpunction variants) as well as disambiguation issues
+(linking ``Hobbit'' to the best concept depending on question,
+or identifying that ``the first time'' might not be a movie reference)
+are non-trivial problems.
+\cite{LeanFreebaseYao} agrees that the current
+datasets like WebQuestions do not strain this issue realistically.
+Some aspects (like fast fuzzy searches) are mostly of engineering interest,
+but an example of semantically interesting scientific problem here
+is a general mechanism to prefer certain classes of concepts based
+on context, say movie instances of ``The Hobbit'' when asked about a director.
+A baseline idea (slightly inspired by \cite{QuASE}) would be to rank concepts
+based on similarity of vector embeddings (Sec.~\ref{sec:embeddings})
+of the question and of the concept description.
+We are already in progress of building an entity linking dataset to properly
+compare various approaches.
+
+\textbf{How to map unseen question focuses to knowledge graph edges?}
+The existing structured QA proposals (as surveyed in Sec.~\ref{sec:structured})
+rely on seeing each kind of question with many variations to infer explicit mappings
+from in-question words to particular relations in the knowledge base ontology.
+In open domain, the long tail of exotic questions would escape this;
+in closed domain, amassing a large enough corpus of questions may be tricky.
+At the same time, a human operator has no trouble finding the appropriate
+relation based on its label.
+Therefore, seeking a general way to match questions to labels of properties
+(or even property paths) seems desirable, instead of simply learning a fixed
+mapping from individual in-question words.
+Again, leveraging an abstract representation of word meanings like vector
+embeddings would be promising.
+
+\textbf{How to pick the source sentences most likely to bear an answer?}
+is an important question when dealing with question answering on unstructured
+text corpora.  While Sec.~\ref{sec:anssentsel} surveys some candidates,
+TODO (very problematic reference dataset; compound embeddings with NEs)
+
+\textbf{How to integrate relation extraction approaches with question answering?}
+is a research question that would boost the more naive approaches of answer
+hypothesis generation by the research in relation extraction (TODO references).
+One obvious approach is to first run general relation extraction on the knowledge
+corpus, then query such a structured database.  However, I believe that the task
+of ``reading'' text with a particular question in mind makes the task of identifying
+pertaining relations considerably easier, and features used to extract a relation
+would be useful for scoring the answers too.
+Adapting well-known relation extraction strategies is a first step,
+but going further and exploiting synergies with my work on the other questions,
+I would like to experiment also with using embedded representation
+of the sentences
+(directly for relation extraction, or, say, as an attention mechanism
+in the spirit of \cite{ReadAndComprehend}).
+
+Many of the research questions might be in part answered by
+vector embeddings of words, or whole sentences.
+One reason we emphasize this approach so much is its high reusability potential:
+a well developed solution to one problem might help with another one, both
+on conceptual level and on the level of actual performance, e.g.\ applying
+multi-task learning to learn a common representation of source artifacts.
+To get there, we need to ask two important questions about vector embeddings
+themselves, though.
+\textbf{How to keep the signal level high and represent
+complex statements when building compound embeddings?} points out that right
+now, we do not know how to step from representing short and simple snippets or well known entities%
+\footnote{When representing entities, we are thinking about representations
+built in the spirit of \cite{QANTA}.}
+to representing complex sentences (like in a typical Wikipedia article) or
+rare entities.
+Moreover, when we are to process sentences that contain numbers (like dates)
+or references to entities, we need to answer
+\textbf{How to embed or tie arbitrary data in addition to normal words
+to compound embeddings?}
+The current state of art does not seem to go beyond simple hacks like
+carrying bag-of-tokens along the embeddings and counting intersect size
+of that set when classifying relationships between two embedding \cite{Yu2014Deep}.
