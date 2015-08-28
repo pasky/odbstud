@@ -362,9 +362,10 @@ naive web search integration (Bing-returned snippets) & & & & \\
 \hline
 full-text hold-out & 49.5\% & 20.9\% & 0.277 & 5.8s \\
 structured hold-out & 73.5\% & 29.1\% & 0.376 & 23.8s \\
+\hline
 type coercion hold-out & 79.3\% & 22.1\% & 0.314 & 30.0s \\
 concept clues hold-out & 67.9\% & 23.0\% & 0.314 & 25.6s \\
-clue overlap test hold-out & 79.3\% & 29.5\% & 0.390 & 30.1s \\
+CRF hold-out & & & & \\
 \hline
 \end{tabular}
 \vspace*{-0.2cm}
@@ -449,9 +450,9 @@ System & Precision-at-1 & F1 (Berant) & MRR \\ \hline
 \textsc{Sempre} (2013) & & & \\
 \textsc{Sempre} (2014) & & & \\
 \textsc{Paralex} (2014) & & & \\
-JacanaFB & & & & \\
-OQA \citep{OQA} & & & & \\ \hline
-\textbf{YodaQA v1.1} & & & & \\
+JacanaFB & & & \\
+OQA \citep{OQA} & & & \\ \hline
+\textbf{YodaQA v1.1} & & & \\
 \hline
 \end{tabular}
 \vspace*{-0.2cm}
