@@ -277,8 +277,8 @@ As we present performance analysis of our system,
 we shall first detail our experimental setup;
 this also includes discussion of our question dataset.
 
-Then, we proceed with the actual results --- we measure the \textit{IR recall}
-of the system (whether a correct answer has been generated and considered,
+Then, we proceed with the actual results --- we measure the \textit{AP recall}
+of the system (recall of the Answer Production component --- whether a correct answer has been generated and considered,
 without regard to its score) and \textit{precision-at-one} (whether the
 correct answer has been returned as the top answer by the system).
 We find this preferrable to typical information retrieval measures like MRR or MAP
@@ -353,7 +353,7 @@ TODO re-measure
 \centering
 \begin{tabular}{|c|cccc|}
 \hline
-Pipeline & IR Recall & Precision-at-1 & MRR & time \\ \hline \hline
+Pipeline & AP Recall & Precision-at-1 & MRR & time \\ \hline \hline
 default & 79.3\% & 32.6\% & 0.420 & 28.8s \\
 \hline
 full-text scaling ($6\to12$ fetched results) & 82.3\% & 34.0\% & 0.430 & 50.0s \\
@@ -397,7 +397,7 @@ AMD FX-8350 with 24GB RAM and SSD backed databases.%
 bulk of the time per question is therefore spent querying the search engine and parsing sentences,
 making it an accurate representation of time spent on previously unseen questions.}
 By raising the limiting
-parameters, we can observe further IR recall increase and a solid precision improvement.
+parameters, we can observe further AP recall increase and a solid precision improvement.
 Our system could therefore meaningfully make use of further computing resources.
 
 We also benchmarked performance with various components of the pipeline
@@ -421,7 +421,7 @@ with ours benchmarked on non-curated version of the TREC 2002, 2003 dataset test
 \centering
 \begin{tabular}{|c|cccc|}
 \hline
-System & Precision-at-1 & IR Recall & F1 & MRR \\ \hline
+System & Precision-at-1 & AP Recall & F1 & MRR \\ \hline
 LLCpass03 \citep{LCC} (hand-crafted system) & 68.5\% & & & \\
 AskMSR \citep{AskMSR} (web-search system) & 61.4\% & & & 0.507 \\ \hline
 OpenEphyra \citep{Ephyra2006} (hand-crafted OSS) & ``above 25\%'' & & & \\
