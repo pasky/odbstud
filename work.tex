@@ -195,6 +195,15 @@ Given a picked passage, the \textbf{passage analysis} process executes an NLP pi
 currently, the answer extraction strategy entails simply converting all named entities and noun phrases to candidate answers.
 Also, object constituents in sentences where subject is the question LAT are converted to candidate answers.
 
+In addition, we implement
+an enhanced answer production strategy (inspired by the \textbf{Jacana} QA system)
+that approaches the problem of identifying
+the answer in a text passage in a way similar to named entity recognition: as
+a (token) sequence tagging (by begin-inside-outside labels) that uses the conditional
+random field model to predict labels.  \cite{TreeEdit2013Yao}
+However, we use a significantly simplified feature set: just part-of-speech tags,
+named entity labels and dependency labels as token sequence unigrams, bigrams and trigrams.
+
 \subsection{Structured Knowledge Bases}
 
 Aside of full-text search, we also employ structured knowledge bases organized in RDF triples;
