@@ -12,8 +12,8 @@ begin graph
    xtitle "\#Questions"
    xticks lstyle 2
    xaxis min 1 max 430
-   xplaces 141 200 230 258 340
-   xnames "141" "205" "227" "258" "340"
+   xplaces 142 198 215 256 331
+   xnames "142" "198" "215" "256" "331"
 
    ytitle "Answer Rank (at least)"
    yaxis log min 1 max 250 nticks 50 grid
@@ -32,8 +32,8 @@ begin graph
    end layer
 end graph
 
-graph_vline 141 1 250
-graph_vline 205 1 250
-graph_vline 227 1 250
-graph_vline 258 1 250
-graph_vline 340 1 250
+graph_vline 142 1 250
+graph_vline 198 1 250
+graph_vline 215 1 250
+graph_vline 256 1 250
+graph_vline 331 1 250
