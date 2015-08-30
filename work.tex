@@ -224,10 +224,11 @@ and generate candidate answers for each object in such a triple, with the predic
 Furthermore, we have trained a multi-label classifier (logistic regression)
 that predicts \textit{property paths}
 likely connecting an identified in-question concept with the answer in the knowledge base
-graph based on particular forms in question representation. \cite{LeanFreebaseYao}
+graph based on particular words in question representation. \cite{LeanFreebaseYao}
 Unlike \cite{LeanFreebaseYao}, we consider long property paths as
 Freebase is organized such that finding related concepts
-often requires traversing intermediate nodes representing relationshibs (e.g.\ siblinghood).
+often requires traversing intermediate nodes representing relationshibs (e.g.\ siblinghood);
+we also do not consider all unigrams and bigrams but just the LATs and SVs.
 
 \subsection{Answer Analysis}
 
