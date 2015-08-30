@@ -21,7 +21,8 @@ that augment human database experts. \citep{BergamaschiKeymantic, BlunschiSODA}
 We do not consider this branch of research further.
 
 QALD is much richer field of research, with yearly challenges \citep{QALD} and
-popular reference datasets Free917 \citep{Free917} and WebQuestions \citep{WebQuestions}.
+popular reference datasets Free917 \citep{Free917} and WebQuestions \citep{WebQuestions}.%
+\footnote{In the past, closed-domain datasets like GeoQuery were also popular.}
 The reference knowledge base is typically Freebesa \citep{Freebase},
 which holds a large amount of open domain real-world facts.%
 \footnote{Freebase has been phased out into legacy state at this point.
@@ -32,7 +33,7 @@ to semantically parse a naturally phrased question into a structured
 expression representing a graph query. \citep{SPBerant2014Paraphrase, Semantic2014Bordes}
 
 \citep{Semantic2014Bordes} proposed a classification of QALD methods
-that we will adopt, outlining two general strategies:
+that we will adopt, outlining two general paradigms:
 
 \begin{quote}
 \textbf{Information
@@ -53,7 +54,11 @@ and appear roughly comparable in accuracy.
 
 The most popular question dataset is WebQuestions \citep{WebQuestions},
 which contains 3778 training and 2032 testing questions generated
-automatically by a combination of Google Suggest API and Freebase
+automatically by a combination of Google Suggest API and Freebase%
+\footnote{Note that no fixed version of Freebase is used.
+	Since the answers are typically not a subject of temporal drift,
+	it is unlikely that different Freebase snapshots would yield
+	significant differences, but we are not aware of any study confirming this.}
 and with the gold standard answers manually produced by Amazon Mechanical Turk workers.%
 \footnote{The gold standard has noise level of about $5\%$ questions,
 	based on manual error analysis of a Google QA test on a movies sub-sample.}
@@ -95,16 +100,54 @@ used.
 while \textit{MAP} (Mean Average Precision) is not as intuitively interpretable, but generalizes
 even to a scenario with multiple expected correct answers.
 
+\begin{figure}[t]
+%% increase table row spacing, adjust to taste
+%\renewcommand{\arraystretch}{1.3}
+\centering
+\begin{tabular}{|c|ccc|}
+\hline
+System & Precision@1 & A\@. Precision & A\@. Recall & F1 (Berant) & F1 (Yao) & MRR & MAP \\ \hline
+\cite{TreeFreebase2014Yao} &
+	             & 38.8\%         & 45.8\%      & 33.0\%      & 42.0\%   & --- & --- \\
+\cite{LeanFreebaseYao} &
+	             & ---            & ---         & 44.3\%      & 53.5\%   & --- & --- \\
+\hline
+\end{tabular}
+\vspace*{-0.2cm}
+\caption{Benchmark results of structured KB systems on the WebQuestions dataset using Freebase.}
+\label{fig:structcompare}
+\end{figure}
+
 \subsection{Information Retrieval Approach}
 
 \textbf{Information Extraction over Structured Data: Question Answering with Freebase (Jacana Freebase)} \citep{TreeFreebase2014Yao}
-	--- TODO.
-		Open source.
+	produces a set of fixed dependency-parse based question features.
+	The question entity is linked to a Freebase concept using the Freebase Search API;
+	Freebase concepts neighboring the question concept in the knowledge
+	graph are identified;
+	Freebase features are generated for all
+	properties of each concept, the connecting relation and rank
+	of the connecting relation predicted by a question-relation
+	alignment model.  The alignment model is a bag-of-words
+	naive bayes classifier that predicts the probability of a relation
+	(or sub-relation) component based on the question tokens;
+	it is trained on \textsc{ClueWeb} sentences that contain
+	both the question and answer.
+	Finally, composite features are built for all tuples of question and Freebase features
+	and a logistic regression model predicts the most likely Freebase concept to answer.
+	On WebQuestion+Freebase, this scores F$_1$ (Yao) 42.0\%,
+	with answer precision $38.8\%$ and answer recall $42.0\%$.
+	Without the alignment model, the system has F$_1$ (Yao) 36.9\%.
+	The implementation is open source.
 
 \textbf{Lean Question Answering over Freebase from Scratch (kitt.ai)} \citep{LeanFreebaseYao}
-	--- simple fuzzy string matching to identify Freebase concepts,
-		bag-of-words logistic regression to identify relations.
-		WebQuestions F1 Berant 44.3\%, F1 Yao 53.5\%.
+	is a simple approach that uses
+	fuzzy matching of all question bigrams to link entities to Freebase concepts,
+	sorts them in the Freebase Search API order,
+	and predicts Freebase relations linking the concept with the answer
+	by a bag-of-unigrams-and-bigrams logistic regression.
+	On WebQuestions+Freebase, it scores F$_1$ (Berant) 44.3\%, F$_1$ (Yao) 53.5\%.
+	On the training set, this approach had AP recall of $62\%$.
 
 \subsection{Semantic Parsing Approach}
 
