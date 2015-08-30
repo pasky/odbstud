@@ -400,7 +400,7 @@ CRF hold-out & & & & \\
 \vspace*{-0.2cm}
 \caption{Benchmark results of various pipeline variants on the \textit{curated} test dataset.
 MRR is the Mean Reciprocal Rank $|Q|\cdot\sum_{q\in Q}{1/r_q}$, time is the average time spent answering one question.}
-\label{fig:bench}
+\label{fig:holdoutbench}
 \end{figure}
 
 \begin{figure}[t]
@@ -412,7 +412,7 @@ MRR is the Mean Reciprocal Rank $|Q|\cdot\sum_{q\in Q}{1/r_q}$, time is the aver
 \end{center}
 \end{figure}%\vspace{5mm}
 
-Benchmark results over various pipeline configurations are laid out in Fig.~\ref{fig:ranks}.
+Benchmark results over various pipeline configurations are laid out in Fig.~\ref{fig:holdoutbench}.
 Aside of the general performance of the system,
 it is instructive to look at the histogram of answer ranks
 for the default pipeline, shown in Fig.~\ref{fig:ranks}.
@@ -465,7 +465,7 @@ OQA \citep{OQA} (modern fully-learned OSS) & & & 29\%$^{**}$ & \\ \hline
 \caption{Benchmark results of some relevant systems on the unmodified TREC dataset.\quad
 $^*$ answer-bearing sentence retrieval\quad
 $^{**}$ sub-sampled dataset with manual evaluation}
-\label{fig:bench}
+\label{fig:trecbench}
 \end{figure}
 
 In Fig.~\ref{fig:wqbench}, we compare ourselves with other published systems

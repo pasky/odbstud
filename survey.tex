@@ -8,6 +8,7 @@ semantic web)
 
 
 \section{Structured Data QA}
+\label{sec:structured}
 
 When answering questions on structured data, we can further
 consider either helping users access relational databases (Natural Language Interface to Databases; NLIDB)
@@ -122,6 +123,7 @@ even to a scenario with multiple expected correct answers.
 
 
 \section{Unstructured Data QA}
+\label{sec:unstructured}
 
 When dealing with question answering on top of unstructured data,
 two research directions exist: aside of generating a crisp answer,
@@ -174,6 +176,7 @@ as well as requiring only single answer returned and computing simple accuracy \
 
 
 \subsection{Answer Sentence Selection}
+\label{sec:anssentsel}
 
 Binary classification or ranking problem.
 TODO TREC-based dataset by Wang et al.
@@ -274,6 +277,7 @@ an arbitrary English word that would describe the answer concept
 (e.g. ``inventor'' or ``length'').
 
 \subsection{Entity Linking}
+\label{sec:entitylink}
 
 When a question is analyzed, one of the main tasks is typically recognition
 of entity mentions in the question text.  The system should process all
@@ -318,6 +322,9 @@ is missing (e.g.\ in a context detailing an incident of the well-known personali
 	Three composite vector embedding models are considered,
 	based on bi-directional LSTM and convolution-ish architectures.
 
+
+
+
 \section{Hybrid QA Systems}
 
 Full-scale end-to-end systems combining structured and unstructured approaches.
@@ -334,11 +341,21 @@ mostly independent pipelines which have their candidate answers combined,
 while YodaQA emphasizes modularity on the pipeline stage level,
 with e.g.\ all answer producers sharing a common answer analysis stage.
 
+
+
+
+
 \section{Non-Factoid QA}
+\label{sec:nonfactoid}
 
 TODO very short overview.  The MemNN task.  Text entailment.
 
+
+
+
+
 \section{Vector Embeddings of Words}
+\label{sec:embeddings}
 
 TODO rewrite, expand.
 
