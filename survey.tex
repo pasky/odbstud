@@ -161,9 +161,8 @@ used, as well as \textit{precision}, \textit{recall} and \textit{F$_1$}.
 Consider a question answered correctly if the top-ranked answer is correct:
 then, precision is the proportion of correctly answered questions to all
 answered questions,%
-\footnote{Except some outliers; \cite{Ephyra2006} uses precision to denote number
-	of questions where at least one of the suggested answers
-	is correct --- something we call Answer Production Recall later.}
+\footnote{Except some outliers; \cite{Ephyra2006} uses the ``precision'' term
+	to denote AP recall.}
 while recall would be the proportion of correctly answered questions to all
 questions altogether --- this definition is shared by
 e.g.\ \cite{TreeEdit2013Yao} and \cite{QuASE}.
@@ -173,6 +172,13 @@ of questions that are answered correctly when attempting to answer 75\% of quest
 TREC competitions used MRR \citep{TREC8,TREC9,TREC10},
 confidence-weighted score $1/Q \sum_{i=1}^Q \textrm{precision-at-$i$} / i$ \citep{TREC11},
 as well as requiring only single answer returned and computing simple accuracy \citep{TREC12}.
+
+Many unstructured QA systems are primarily IR machines that follow
+an overproduce-and-choose answer production strategy.  To measure
+the answer production performance, \cite{WatsonIR} uses \textit{candidate binary recall},
+that is the number of questions where a correct answer has been generated as a candidate
+for scoring;
+we also use this measure, but prefer the term \textit{answer production (AP) recall}.
 
 
 \subsection{Answer Sentence Selection}
