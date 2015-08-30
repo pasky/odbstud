@@ -319,6 +319,7 @@ scaling of the system (extending the alotted answer time) and performance
 impact of its various components (hold-out testing).
 
 \subsection{Experimental Setup}
+\label{sec:expsetup}
 
 Our code is version tracked in a public GitHub repository
 \url{https://github.com/brmson/yodaqa}, and the experiments presented
@@ -381,7 +382,7 @@ TODO re-measure
 \centering
 \begin{tabular}{|c|cccc|}
 \hline
-Pipeline & AP Recall & Precision-at-1 & MRR & time \\ \hline \hline
+Pipeline & AP Recall & Precision-at-one & MRR & time \\ \hline \hline
 default & 79.3\% & 32.6\% & 0.420 & 28.8s \\
 \hline
 full-text scaling ($6\to12$ fetched results) & 82.3\% & 34.0\% & 0.430 & 50.0s \\
@@ -416,7 +417,9 @@ Aside of the general performance of the system,
 it is instructive to look at the histogram of answer ranks
 for the default pipeline, shown in Fig.~\ref{fig:ranks}.
 We can observe that while precision-at-one is TODO,
-precision-at-five is already at TODO of test questions.
+precision-at-five%
+\footnote{Proportion of questions where the correct answer is ranked in top five.}
+is already at TODO of test questions.
 
 The information retrieval parameters of the default pipeline are selected so
 that answering a question takes about 10s on average on a single core of
@@ -449,7 +452,7 @@ with ours benchmarked on non-curated version of the TREC 2002, 2003 dataset test
 \centering
 \begin{tabular}{|c|cccc|}
 \hline
-System & Precision-at-1 & AP Recall & F1 & MRR \\ \hline
+System & Precision-at-one & AP Recall & F1 & MRR \\ \hline
 LLCpass03 \citep{LCC} (hand-crafted system) & 68.5\% & & & \\
 AskMSR \citep{AskMSR} (web-search system) & 61.4\% & & & 0.507 \\ \hline
 OpenEphyra \citep{Ephyra2006} (hand-crafted OSS) & ``above 25\%'' & & & \\
@@ -474,7 +477,7 @@ on the WebQuestions dataset (test split), as reported in their respective papers
 \centering
 \begin{tabular}{|c|ccc|}
 \hline
-System & Precision-at-1 & F1 (Berant) & MRR \\ \hline
+System & Precision-at-one & F1 (Berant) & MRR \\ \hline
 \textsc{Sempre} (2013) & & & \\
 \textsc{Sempre} (2014) & & & \\
 \textsc{Paralex} (2014) & & & \\

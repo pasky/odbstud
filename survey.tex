@@ -65,10 +65,10 @@ datasets are also sometimes published.
 There is no complete consensus on benchmarking metrics in this task,
 owing to different strategies in the systems.  Most generate an ordered
 list of answers, and
-\cite{Fader2013Paraphrase} defines \textit{precision} as the proportion of returned answers that are true,
-while \textit{recall} would be the proportion of questions that are correctly answered;
+\cite{Fader2013Paraphrase} uses \textit{answer precision} as the proportion of returned answers that are true,
+while \textit{question recall} would be the proportion of questions that are correctly answered;
 however,
-\cite{TreeFreebase2014Yao} defines \textit{recall} more naturally
+\cite{TreeFreebase2014Yao} defines \textit{answer recall} more naturally
 as a proportion of true answers that were returned.
 On the other hand,
 \cite{Semantic2013Berant}
@@ -129,6 +129,49 @@ two research directions exist: aside of generating a crisp answer,
 \footnote{\url{http://aclweb.org/aclwiki/index.php?title=Question_Answering_\%28State_of_the_art\%29}}
 where instead of the answer, just an appropriate answer-bearing passage
 is to be returned to the user.
+
+\subsection{Dataset and Evaluation}
+
+The main benchmarked dataset is a collection of TREC competition datasets
+from the turn of the century,%
+\footnote{\url{http://trec.nist.gov/data/qamain.html}}
+on top of the AQUAINT newswire corpus;
+as gold standard,
+regular expressions matching the answers judged correct were provided.
+Compared to e.g. WebQuestions + Freebase, the TREC questions
+are more realistic in open domain user QA setting --- they are diverse
+in answer type and level of detail and of quite varying difficulty.
+On the other hand, naive usage of this dataset hits a few major issues:
+
+\begin{itemize}
+	\item The AQUAINT corpus is not freely available, and some of the questions are dependent on that time period (like population numbers or persons occupying public positions) or are highly specific (referring particular individual news articles).
+	\item Regular expressions are limited when matching alternative spellings or name abbreviations, and almost break down when matching entities such as dates or dimensional quantities (possibly using different units).
+	\item There are no well-defined train/test splits, datasets for individual years significantly vary in character, and even the years included in summary TREC datasets differ.
+\end{itemize}
+
+Therefore, measurements on TREC are very difficult to compare.  Many papers
+declare that they subsampled the dataset in arbitrary ways or judged correct
+answers manually.  We attempt to rectify this situation for future comparisons
+in Sec.~\ref{sec:expsetup}.
+
+The typical IR metrics of \textit{MRR} and \textit{MAP} are commonly
+used, as well as \textit{precision}, \textit{recall} and \textit{F$_1$}.
+Consider a question answered correctly if the top-ranked answer is correct:
+then, precision is the proportion of correctly answered questions to all
+answered questions,%
+\footnote{Except some outliers; \cite{Ephyra2006} uses precision to denote number
+	of questions where at least one of the suggested answers
+	is correct --- something we call Answer Production Recall later.}
+while recall would be the proportion of correctly answered questions to all
+questions altogether --- this definition is shared by
+e.g.\ \cite{TreeEdit2013Yao} and \cite{QuASE}.
+\cite{WatsonOverview} uses \textit{precision@75} to denote a proportion
+of questions that are answered correctly when attempting to answer 75\% of questions.
+
+TREC competitions used MRR \citep{TREC8,TREC9,TREC10},
+confidence-weighted score $1/Q \sum_{i=1}^Q \textrm{precision-at-$i$} / i$ \citep{TREC11},
+as well as requiring only single answer returned and computing simple accuracy \citep{TREC12}.
+
 
 \subsection{Answer Sentence Selection}
 
