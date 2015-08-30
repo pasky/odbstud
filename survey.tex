@@ -1,64 +1,100 @@
 \chapter{State of the Art in Factoid Question Answering}
 \label{ch:survey}
 
-Basic division:  Querying for answers on structured knowledge bases,
-finding answers in unstructured (text) data.
-
-TODO more existing systems
-
-The classic QA system \textbf{OpenEphyra} \citep{Ephyra2006}
-operates on the basis of fixed question categories with hand-crafted rules,
-and puts emphasis on querying web search engines.
-The \textbf{OAQA} initiative \citep{OAQATowards} has developed a basic QA framework,
-but does not provide an end-to-end pipeline and its usage of UIMA has
-in our opinion severe design limitations (see below).
-The \textbf{WatsonSim} system \citep{WatsonSim} has begun developing independently
-during the course of our own work and it works on Jeopardy! statements rather
-than questions.
-
-\textbf{Jacana} \citep{TreeEdit2013Yao} \citep{TreeEditIR2013Yao}
-is a promising set of loosely coupled QA-related methods
-and algorithms, focused on machine learning of textual entailment.  It is
-not meant to be a full QA framework and using it as an end-to-end pipeline
-is not straightforward, but integration of the Jacana implementation as
-modules in YodaQA is our long-term plan.
-
-\textbf{OpenQA} \citep{OpenQA} is a recently introduced end-to-end QA pipeline platform
-also developed independently during the course of our work, and shares our
-goal of a common research platform in the field.  However, the approach
-is very different, as OpenQA is more of a portfolio-style engine with
-mostly independent pipelines which have their candidate answers combined,
-while YodaQA emphasizes modularity on the pipeline stage level,
-with e.g.\ all answer producers sharing a common answer analysis stage.
-
+The research in Question Answering has been proceeding in several,
+largely independent, directions.  The main division is between QA
+on structured knowledge bases (typically graph databases like the
+semantic web)
 
 
 \section{Structured Data QA}
 
-Benchmark:  WebQuestions (pre-determined splits), TREC (various years, curated version, \dots), WikiAnswers.
+When answering questions on structured data, we can further
+consider either helping users access relational databases (Natural Language Interface to Databases; NLIDB)
+or finding matching relationships in the linked data graph of semantic web (Ontology-based Question Answering; QALD).
 
-Measure: Precision, p@1, recall, F1
+We are not aware of any significant recent work in the NLIDB domain
+that would be based on well defined, published dataset and rigorously
+evaluate results --- most research concerns building auxiliary systems
+that augment human database experts. \citep{BergamaschiKeymantic, BlunschiSODA}
+We do not consider this branch of research further.
 
-Bordes et al. \citep{Semantic2014Bordes} sums up:
-\textit{%
-The state-of-the-art techniques in open QA can be classified into two main
-classes, namely, information retrieval based and semantic parsing based. Information
-retrieval systems first retrieve a broad set of candidate answers by querying
+QALD is much richer field of research, with yearly challenges \citep{QALD} and
+popular reference datasets Free917 \citep{Free917} and WebQuestions \citep{WebQuestions}.
+The reference knowledge base is typically Freebesa \citep{Freebase},
+which holds a large amount of open domain real-world facts.%
+\footnote{Freebase has been phased out into legacy state at this point.
+	WikiData is set to replace it, but the migration of knowledge
+	is still ongoing.}
+QALD is one of the benchmarks for the semantic parsing task, aiming
+to semantically parse a naturally phrased question into a structured
+expression representing a graph query. \citep{SPBerant2014Paraphrase, Semantic2014Bordes}
+
+\citep{Semantic2014Bordes} proposed a classification of QALD methods
+that we will adopt, outlining two general strategies:
+
+\begin{quote}
+\textbf{Information
+Retrieval (IR)} systems first retrieve a broad set of candidate answers by querying
 the search API of KBs with a transformation of the question into a valid
 query and then use fine-grained detection heuristics to identify the exact answer
-(Kolomiyets survey 2011, Unger et al. 2012 templates, \citep{TreeFreebase2014Yao}).
-On the other hand, semantic parsing methods focus on the correct
+(Kolomiyets survey 2011, Unger et al. 2012 templates, \citep{TreeFreebase2014Yao} TODO).
+On the other hand, \textbf{Semantic Parsing (SP)} methods focus on the correct
 interpretation of the meaning of a question by a semantic parsing system. A
 correct interpretation converts a question into the exact database query that
-returns the correct answer. Interestingly, recent works \citep{Semantic2013Berant} \citep{SPBerant2014Paraphrase} \citep{OQA} have shown that
-such systems can be efficiently trained under indirect and imperfect supervision
-and hence scale to large-scale regimes, while bypassing most of the annotation
-costs.}
+returns the correct answer. \citep{Semantic2013Berant, SPBerant2014Paraphrase, OQA}
+\end{quote}
 
-These two approaches (IE vs. SP) have been further compared in \citep{FreebaseQA2014Yao}
-and seem roughly comparable.
+These two strategies have been also compared in detail in \cite{FreebaseQA2014Yao}
+and appear roughly comparable in accuracy.
 
-\subsection{IE For Structued Data}
+\subsection{Dataset and Evaluation}
+
+The most popular question dataset is WebQuestions \citep{WebQuestions},
+which contains 3778 training and 2032 testing questions generated
+automatically by a combination of Google Suggest API and Freebase
+and with the gold standard answers manually produced by Amazon Mechanical Turk workers.%
+\footnote{The gold standard has noise level of about $5\%$ questions,
+	based on manual error analysis of a Google QA test on a movies sub-sample.}
+Answers are always Freebase entities --- never relations themselves,
+literals like numerical quantities, metadata like counts, or whole sentences.
+Sometimes, the correct answers are lists of entities.
+Extra measurements on customized versions of TREC (see below) and WikiQuestions
+datasets are also sometimes published.
+
+There is no complete consensus on benchmarking metrics in this task,
+owing to different strategies in the systems.  Most generate an ordered
+list of answers, and
+\cite{Fader2013Paraphrase} defines \textit{precision} as the proportion of returned answers that are true,
+while \textit{recall} would be the proportion of questions that are correctly answered;
+however,
+\cite{TreeFreebase2014Yao} defines \textit{recall} more naturally
+as a proportion of true answers that were returned.
+On the other hand,
+\cite{Semantic2013Berant}
+almost always generates just a single
+answer (or ``precise'' list, in case of a list question)
+for every question and thus measures just the \textit{accuracy}.
+The most common measure shared by most papers is F$_1$
+(with recall as a proportion of correct answers found).
+However, even this measure comes in two variations:
+\textit{F$_1$ (Berant)} is average of precision/recall harmonic means per question,%
+\footnote{This is about the same as the accuracy in \cite{Semantic2013Berant} style systems.
+When comparing using this measure in ranked-answers systems,
+a single answer is often forced even if none would be produced for the question otherwise. \citep{TreeFreebase2014Yao}}
+while \textit{F$_1$ (Yao)} is harmonic mean of answer precision and recall computed across all questions.
+
+A caveat of these measures is that they put emphasis on the complete
+set of returned answers, rather than just focusing on the top of
+the ranked list.  Thus, in addition IR-style measures are also often
+used.
+\cite{Semantic2014Bordes} uses
+\textit{precision@1} as the proportion of questions that have a correct answer ranked first.
+\textit{MRR} (Mean Reciprocial Rank) can capture the average rank the correct answer appears at,
+while \textit{MAP} (Mean Average Precision) is not as intuitively interpretable, but generalizes
+even to a scenario with multiple expected correct answers.
+
+\subsection{Information Retrieval Approach}
 
 \textbf{Information Extraction over Structured Data: Question Answering with Freebase (Jacana Freebase)} \citep{TreeFreebase2014Yao}
 	--- TODO.
@@ -69,7 +105,7 @@ and seem roughly comparable.
 		bag-of-words logistic regression to identify relations.
 		WebQuestions F1 Berant 44.3\%, F1 Yao 53.5\%.
 
-\subsection{SP For Structured Data}
+\subsection{Semantic Parsing Approach}
 
 \textbf{Open Question Answering Over Curated and Extracted Knowledge Bases (OQA)} \citep{OQA}
 	--- paraphrase (mined operators) $\to$ parse (templates) $\to$ rewrite (mined operators) $\to$ execute (ensemble of KBs).
@@ -80,6 +116,10 @@ and seem roughly comparable.
 \textbf{(Paralex)} \citep{Fader2013Paraphrase}
 
 \textbf{(SEMPRE)} \citep{SPBerant2014Paraphrase}
+
+
+
+
 
 \section{Unstructured Data QA}
 
@@ -122,6 +162,11 @@ TREC benchmark.  Curated TREC.  WebQuestions also possible(?).
 \textbf{(DeepQA IBM Watson)} \citep{WatsonOverview}
 
 \textbf{(Jacana)} \citep{TreeEdit2013Yao} \citep{TreeEditIR2013Yao}
+is a promising set of loosely coupled QA-related methods
+and algorithms, focused on machine learning of textual entailment.  It is
+not meant to be a full QA framework and using it as an end-to-end pipeline
+is not straightforward, but integration of the Jacana implementation as
+modules in YodaQA is our long-term plan.
 
 \textbf{Web-based Question Answering: Revisiting AskMSR (AskMSR+)}
 
@@ -139,6 +184,16 @@ TREC benchmark.  Curated TREC.  WebQuestions also possible(?).
 	sub-sampling and re-evaluation.)
 
 \textbf{YodaQA: A Modular Question Answering System Pipeline} \citep{YodaQAPoster2015}
+
+The classic QA system \textbf{OpenEphyra} \citep{Ephyra2006}
+operates on the basis of fixed question categories with hand-crafted rules,
+and puts emphasis on querying web search engines.
+The \textbf{OAQA} initiative \citep{OAQATowards} has developed a basic QA framework,
+but does not provide an end-to-end pipeline and its usage of UIMA has
+in our opinion severe design limitations (see below).
+The \textbf{WatsonSim} system \citep{WatsonSim} has begun developing independently
+during the course of our own work and it works on Jeopardy! statements rather
+than questions.
 
 \textbf{MemNets} though I still think it's a toy task in QA context.
 
@@ -227,6 +282,14 @@ Full-scale end-to-end systems combining structured and unstructured approaches.
 \textbf{(DeepQA IBM Watson)} \citep{WatsonOverview}
 
 \textbf{YodaQA: A Modular Question Answering System Pipeline} \citep{YodaQAPoster2015}
+
+\textbf{OpenQA} \citep{OpenQA} is a recently introduced end-to-end QA pipeline platform
+also developed independently during the course of our work, and shares our
+goal of a common research platform in the field.  However, the approach
+is very different, as OpenQA is more of a portfolio-style engine with
+mostly independent pipelines which have their candidate answers combined,
+while YodaQA emphasizes modularity on the pipeline stage level,
+with e.g.\ all answer producers sharing a common answer analysis stage.
 
 \section{Non-Factoid QA}
 
