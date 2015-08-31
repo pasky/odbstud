@@ -40,13 +40,39 @@
 	Based on experiences with this baseline and survey of the
 	field, I propose some scientifically promising lines of further
 	QA research.
-\end{abstract}
 
-% errata:
-% - missing answer F1 for YodaQA on WebQuestions
-% - in survey, missing descriptions of more unstructured and other systems,
-%   and entity linking survey; in general, the survey should be considered preliminary, developed in https://github.com/brmson/qasurvey
-% - YodaQA description not completely up-to-date! label-lookup, decforests with entity classification
+	\vspace{3ex}
+
+	\textbf{Errata:} This is a report that was finished in a bit
+	of a rush for a deadline, and has numerous imperfections that I dislike
+	but couldn't have avoided:
+
+	\begin{itemize}
+		\item The survey should be considered preliminary, and
+			is further worked on at \url{https://github.com/brmson/qasurvey}.
+			Many more unstructured, miscellanous and specialized systems
+			should have been described in detail.
+			Entity linking should be surveyed.
+		\item The description of YodaQA v1.1 contains omissions.
+			Gradient-boosted decision forests are currently used
+			for answer scoring instead of logistic regression.
+			Coarse question classification is used to generate
+			extra features for the answer-scoring decision trees.
+			Entity linking involves a fuzzy label lookup.
+		\item YodaQA v1.1 itself is sub-optimal; the MRR of an improved
+			version available at the time of this writing (v1.2)
+			is 0.430 on curated, with precision@1 over 35\%.
+			The only change between v1.1 and v1.2 was retraining
+			of the CRF model for answer production from passages.
+		\item YodaQA evaluation on WebQuestions leaves much to be desired.
+			While it uses ``only structured sources'', these include
+			also DBpedia; restricting this to just Freebase actually
+			improves F$_1$@1 and MRR, though it hurts AP recall.
+			Also, F$_1$ (Berant) is badly missing,
+			but this will require some infrastructure changes in YodaQA
+			to handle answer lists in datasets.
+	\end{itemize}
+\end{abstract}
 
 \tableofcontents
 
