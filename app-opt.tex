@@ -5,8 +5,8 @@ The initial focus of my doctoral research
 was developing algorithm portfolio strategies
 with applications particularly in continuous black-box optimization.
 The results of my work have been a software framework for experiments
-\citep{COCOpf}
-and two results published at top-tier conferences \citep{optpf,ndsqistep}.
+\citep{cocopf}
+and two results published at top-tier conferences \citep{Baudis2014PPSNOnlinePortfolios,Baudis2015GECCO}.
 This research had been primarily supervised by Dr. Petr Pošík.
 
 Let us consider the problem of finding a minimum value of a continuous
@@ -46,7 +46,7 @@ Deciding which algorithm to apply in each step of the portfolio
 optimization is essentialy an instance of the well-known Multi-Armed
 Bandit Problem, where a policy decides which algorithm to try next
 based on their empirically determined expected reward.
-I have built a modular Python framework \textbf{COCOpf} \citep{COCOpf}
+I have built a modular Python framework \textbf{COCOpf} \citep{cocopf}
 suitable both for research and application of this problem.
 
 This helped me to identify fine structure of the problem
@@ -58,7 +58,7 @@ using the popular COCO optimization benchmark \citep{COCO1}, I have
 identified a policy that significantly improves the baseline and
 on well-behaved functions on average overperforms even the overally
 best individual algorithm. This result was presented at the
-PPSN 2014 conference. \citep{optpf}
+PPSN 2014 conference. \citep{Baudis2014PPSNOnlinePortfolios}
 
 \section{Minimizing Separable Functions by a Mix of Methods}
 
@@ -96,4 +96,4 @@ in the univariate case often by a wide margin,
 and that it is behaving robustly even when one of the constituent methods
 is failing to converge.
 This result was presented at the GECCO 2015 conference.
-\citep{ndsqistep}
+\citep{Baudis2015GECCO}

@@ -1,6 +1,6 @@
 TEX=xelatex -shell-escape
-BIB=qa.bib
-BBL=$(BIB:%.bib=%.bbl)
+BIB=qa.bib opt.bib
+BBL=odbstud.bbl
 
 all: odbstud.pdf
 

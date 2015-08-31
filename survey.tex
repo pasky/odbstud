@@ -27,7 +27,7 @@ that augment human database experts. \citep{BergamaschiKeymantic, BlunschiSODA}
 We do not consider this branch of research further.
 
 QALD is much richer field of research, with yearly challenges \citep{QALD} and
-popular reference datasets Free917 \citep{Free917} and WebQuestions \citep{WebQuestions}.%
+popular reference datasets like Free917 \citep{SPCai2013} and WebQuestions \citep{Semantic2013Berant}.%
 \footnote{In the past, closed-domain datasets like GeoQuery were also popular.}
 The reference knowledge base is typically Freebase \citep{Freebase},
 which holds a large amount of open domain real-world facts.%
@@ -46,12 +46,11 @@ that we adopt, outlining two general paradigms:
 \textbf{Information
 Retrieval (IR)} systems first retrieve a broad set of candidate answers by querying
 the search API of KBs with a transformation of the question into a valid
-query and then use fine-grained detection heuristics to identify the exact answer
-(Kolomiyets survey 2011, Unger et al. 2012 templates, \citep{TreeFreebase2014Yao} TODO).
+query and then use fine-grained detection heuristics to identify the exact answer.
 On the other hand, \textbf{Semantic Parsing (SP)} methods focus on the correct
 interpretation of the meaning of a question by a semantic parsing system. A
 correct interpretation converts a question into the exact database query that
-returns the correct answer. \citep{Semantic2013Berant, SPBerant2014Paraphrase, OQA}
+returns the correct answer.
 \end{quote}
 
 These two strategies have been also compared in detail in \cite{FreebaseQA2014Yao}
@@ -59,7 +58,7 @@ and appear roughly comparable in accuracy.
 
 \subsection{Dataset and Evaluation}
 
-The most popular question dataset is WebQuestions \citep{WebQuestions},
+The most popular question dataset is WebQuestions,
 which contains 3778 training and 2032 testing questions generated
 automatically by a combination of Google Suggest API and Freebase%
 \footnote{Note that no fixed version of Freebase is used.
