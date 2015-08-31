@@ -122,7 +122,7 @@ performing entity linking%
 \footnote{Right now, entities are linked just by an exact match of the main or alias label.}
 to concepts (as represented by \textit{enwiki} articles).
 The question representation we produce is similar in spirit
-to DeepQA \cite{WatsonQuestion}: a bag-of-features including
+to DeepQA \citep{WatsonQuestion}: a bag-of-features including
 a set of clues (keywords, keyphrases and linked concepts),
 possible lexical answer types and the selection verb.
 
@@ -201,7 +201,7 @@ an enhanced answer production strategy (inspired by the \textbf{Jacana} QA syste
 that approaches the problem of identifying
 the answer in a text passage in a way similar to named entity recognition: as
 a (token) sequence tagging (by begin-inside-outside labels) that uses the conditional
-random field model to predict labels.  \cite{TreeEdit2013Yao}
+random field model to predict labels.  \citep{TreeEdit2013Yao}
 However, we use a significantly simplified feature set: just part-of-speech tags,
 named entity labels and dependency labels as token sequence unigrams, bigrams and trigrams.
 
@@ -225,9 +225,9 @@ and generate candidate answers for each object in such a triple, with the predic
 Furthermore, we have trained a multi-label classifier (logistic regression)
 that predicts \textit{property paths}
 likely connecting an identified in-question concept with the answer in the knowledge base
-graph based on particular words in question representation. \cite{LeanFreebaseYao}
-Unlike \cite{LeanFreebaseYao}, we consider long property paths as
-Freebase is organized such that finding related concepts
+graph based on particular words in question representation. \citep{LeanFreebaseYao}
+Howeve, we consider long property paths (similar to the core inferential chain of STAGG \citep{STAGG})
+as Freebase is organized such that finding related concepts
 often requires traversing intermediate nodes representing relationshibs (e.g.\ siblinghood);
 we also do not consider all unigrams and bigrams but just the LATs and SVs.
 
@@ -369,7 +369,7 @@ To further facilitate comparison of YodaQA to other systems,
 we also benchmark its performance on the (i) original, unrevised and
 unabridged TREC datasets
 (even though the train/test splits might not be entirely compatible),
-and (ii) the WebQuestions dataset \cite{WebQuestions}
+and (ii) the WebQuestions dataset \citep{Semantic2013Berant}
 (which represents several thousands of open domain factoid questions
 tied to Freebase, popular as a semantic parsing benchmark).
 
@@ -453,7 +453,7 @@ OQA \citep{OQA} (modern fully-learned OSS) & --- & 29\%$^{**}$ & --- \\ \hline
 \hline
 \end{tabular}
 \vspace*{-0.2cm}
-\caption{Benchmark results of some relevant systems on the unmodified TREC dataset.\quad
+\caption{Benchmark results of some relevant systems on the unmodified TREC dataset.\qquad
 $^{*}$ MIT99 subset;
 $^{**}$ sub-sampled dataset with manual evaluation}
 \label{fig:trecbench}
