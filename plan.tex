@@ -65,12 +65,17 @@ embeddings would be promising.
 
 \textbf{How to pick the source sentences most likely to bear an answer?}
 is an important question when dealing with question answering on unstructured
-text corpora.  While Sec.~\ref{sec:anssentsel} surveys some candidates,
-TODO (very problematic reference dataset; compound embeddings with NEs)
+text corpora.  While Sec.~\ref{sec:anssentsel} surveys some approaches,
+our preliminary research has shown that the current reference dataset
+is a very problematic benchmark as the test set appears to be much easier
+than the training set and realitsic QA setting.
+Moreover, the current approaches use compound vector embeddings of sentences,
+but it is troublesome when the sentences need to be matched based on dates,
+entity named and such, as explained below.
 
 \textbf{How to integrate relation extraction approaches with question answering?}
 is a research question that would boost the more naive approaches of answer
-hypothesis generation by the research in relation extraction (TODO references).
+hypothesis generation by the research in relation extraction (e.g. ReVerb, RelEx, NELL, \dots).
 One obvious approach is to first run general relation extraction on the knowledge
 corpus, then query such a structured database.  However, I believe that the task
 of ``reading'' text with a particular question in mind makes the task of identifying
