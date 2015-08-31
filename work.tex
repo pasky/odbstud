@@ -491,3 +491,34 @@ OQA \citep{OQA} & & & \\ \hline
 \caption{Benchmark results of other published systems on the WebQuestions dataset.}
 \label{fig:wqbench}
 \end{figure}
+
+
+
+
+\section{Datasets and Other Work}
+
+As part of our work, we published several other outputs besides the YodaQA system itself:
+
+\begin{itemize}
+\item The \texttt{curated} TREC-based dataset of factoid questions described above.%
+\footnote{\url{https://github.com/brmson/dataset-factoid-curated}}
+
+\item The \texttt{webquestions} dataset that contains WebQuestions dataset in a more convenient format for further processing and automatically annotated by other data such as property paths between questions and answers.%
+\footnote{\url{https://github.com/brmson/dataset-factoid-webquestions}}
+
+\item The \texttt{movies} dataset that contains WebQuestions-based dataset for the movie domain, combined with questions based on web user input and feedback on an earlier version of YodaQA.%
+\footnote{\url{https://github.com/brmson/dataset-factoid-movies}}
+Made available in cooperation with Nguyen Hoang Long.
+
+\item A standalone \texttt{label-lookup} service for fuzzy lookup of labels in corpora.%
+\footnote{\url{https://github.com/brmson/label-lookup}}
+	Co-authored with Nguyen Hoang Long.
+	(A fast Levenshtein distance based lookup library DAWG%
+\footnote{\url{https://github.com/brmson/dawg-levenshtein}}
+	is a work in progress,
+	primarily authored by Tomáš Veselý.)
+
+\item A tool for evaluating the Google QA subsystem.%
+\footnote{\url{https://github.com/brmson/google-qa}}
+	Primarily authored by Nguyen Hoang Long.
+\end{itemize}
