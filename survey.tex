@@ -449,42 +449,43 @@ systems with large amount of handcraft \cite{LCC}
 or wrapping a web search engine \cite{AskMSR} dominated
 (making results difficult or laborious to reproduce,
 and with sometimes limited scientific value).
+Let us cover at least a few most interesting recent systems,
+even though straight evaluation comparison is not possible.
 
-\textbf{(DeepQA IBM Watson)} \citep{WatsonOverview}
+% TODO list more
 
-\textbf{(Jacana)} \citep{TreeEdit2013Yao} \citep{TreeEditIR2013Yao}
-is a promising set of loosely coupled QA-related methods
-and algorithms, focused on machine learning of textual entailment.  It is
-not meant to be a full QA framework and using it as an end-to-end pipeline
-is not straightforward, but integration of the Jacana implementation as
-modules in YodaQA is our long-term plan.
+First, the classic QA system \textbf{OpenEphyra} \citep{Ephyra2006}
+is the best known open source QA system.
+It operates on the basis of fixed question categories with hand-crafted rules,
+and puts emphasis on querying web search engines.
+%The \textbf{OAQA} initiative \citep{OAQATowards} has developed a basic QA framework,
+%but does not provide an end-to-end pipeline and its usage of UIMA has
+%in our opinion severe design limitations (see below).
 
-\textbf{Web-based Question Answering: Revisiting AskMSR (AskMSR+)}
+\textbf{Automatic Coupling of Answer Extraction and Information Retrieval (Jacana)} \citep{TreeEditIR2013Yao}
+couples the answer sentence selection and extraction of \cite{TreeEdit2013Yao}
+described above with IR query mechanism that constructs queries
+which prefer results that would match highest-weighed QA features
+in the followup pipeline stages.
+F$_1$ on MIT99 (200-question subset of TREC) is $23.1\%$
+
+%\textbf{Web-based Question Answering: Revisiting AskMSR (AskMSR+)}
 
 \textbf{Open Domain Question Answering via Semantic Enrichment (QuASE)} \citep{QuASE}
-	--- web-based QA system that links snippet pieces to Freebase entities
-	\textit{(entity linking)} to generate extra features for answers.
+	is a web-based QA system that links question entities to Freebase concepts
+	to generate extra features for answers.
 	One feature is the cosine similarity of word
 	vectors corresponding to question (and web-fetched question support)
 	and answer's textual propreties (like \textit{description}) in Freebase
-	(N.B. word frequency vectors, not embeddings!).
+	(N.B. word frequency vectors, not distributed representations).
 	Another feature is probabilistic type matching by bag of words Bayes model
 	with Perplexity.  Generative mixture model with Dirichlet priors is used
 	for answer scoring.  Compared to naive web search baseline, TREC F1
-	improvement was 3.5\%.  (Absolute numbers not comparable due to
+	improvement was 3.5\%.  (Absolute numbers are not comparable due to
 	sub-sampling and re-evaluation.)
 
-\textbf{YodaQA: A Modular Question Answering System Pipeline} \citep{YodaQAPoster2015}
 
-The classic QA system \textbf{OpenEphyra} \citep{Ephyra2006}
-operates on the basis of fixed question categories with hand-crafted rules,
-and puts emphasis on querying web search engines.
-The \textbf{OAQA} initiative \citep{OAQATowards} has developed a basic QA framework,
-but does not provide an end-to-end pipeline and its usage of UIMA has
-in our opinion severe design limitations (see below).
-
-
-\subsubsection{Non-TREC QA}
+\subsection{Non-TREC QA}
 
 Of course, question answering may diverge from the standard TREC
 setting of brief answers to short English language questions.
