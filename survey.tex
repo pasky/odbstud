@@ -536,15 +536,30 @@ was introduced by \textbf{Learning question classifiers} \citep{QCLearning}.
 They set a baseline of coarse $P_1=91.0\%$, fine $P_1=84.2\%$.
 
 This sentence classification problem has been one of the standard benchmarks
-for semantic NLP tasks:
-\begin{itemize}
-	\item SVM$_S$ (Silva et al., 2011) TODO coarse $P_1=95.0\%$
-	\item DCNN \citep{QtcDCNN} TODO coarse $P_1=93.0\%$
-	\item CNN \citep{CNNSentClass} coarse $P_1=93.6\%$
-	\item Skip-Thought Vectors \citep{SkipThought} coarse $P_1=92.2\%$ (but unsupervised)
-	\item Self-Adaptive Hierarchical Sentence Model \citep{AdaSent} (AdaSent) coarse $P_1=92.6\%$
-	\item TODO more papers; \citep{AdaSent} has some references; separate embedding and classical?, supervised and unsupervised; even primitive baseline is something like $85\%$
-\end{itemize}
+for semantic NLP tasks; a few systems are listed in Fig.~\ref{fig:qcbench}.
+\citep{AdaSent} has more references; note that even primitive baseline would have performance $85\%$.
+
+% TODO: separate embedding and classical?, supervised and unsupervised
+
+\begin{figure}[t]
+%% increase table row spacing, adjust to taste
+%\renewcommand{\arraystretch}{1.3}
+\centering
+\begin{tabular}{|c|c|}
+\hline
+Approach & Coarse $P_1$ \\
+\hline
+SVM$_S$ \citep{QCSilvaSVM} & $95.0\%$ \\
+DCNN \citep{QtcDCNN} & $93.0\%$ \\
+CNN \citep{CNNSentClass} & $93.6\%$ \\
+Skip-Thought \citep{SkipThought} & $92.2\%$ \\ %(but unsupervised)
+AdaSent \citep{AdaSent} & $92.6\%$ \\
+\hline
+\end{tabular}
+\vspace*{-0.2cm}
+\caption{Selected evaluation results for question classification.}
+\label{fig:qcbench}
+\end{figure}
 
 A different approach that was introduced by IBM Watson DeepQA \citep{WatsonTyCor}
 associates the question with a Lexical Answer Type (LAT) which is
