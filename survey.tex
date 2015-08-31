@@ -566,21 +566,23 @@ associates the question with a Lexical Answer Type (LAT) which is
 an arbitrary English word that would describe the answer concept
 (e.g. ``inventor'' or ``length'').
 
-\subsection{Entity Linking}
-\label{sec:entitylink}
-
-When a question is analyzed, one of the main tasks is typically recognition
-of entity mentions in the question text.  The system should process all
-varions of ``When did John F. Kennedy die?'', ``When did JFK die?'',
-``When did Kennedy die?'' and ``Wehn did Kenndey die?''.  An intelligent
-system needs to correctly link entities using aliases or ambiguous
-references and stay resistant to typos.
-
-\textbf{Improving Entity Linking using Surface Form Refinement}
-
-\url{http://nlp.cs.rpi.edu/kbp/2014/elreading.html}
-
-TODO \dots
+%\subsection{Entity Linking}
+%\label{sec:entitylink}
+%
+%When a question is analyzed, one of the main tasks is typically recognition
+%of entity mentions in the question text.  The system should process all
+%varions of ``When did John F. Kennedy die?'', ``When did JFK die?'',
+%``When did Kennedy die?'' and ``Wehn did Kenndey die?''.  An intelligent
+%system needs to correctly link entities using aliases or ambiguous
+%references and stay resistant to typos.
+%
+%\textbf{Improving Entity Linking using Surface Form Refinement}
+%
+%\url{http://nlp.cs.rpi.edu/kbp/2014/elreading.html}
+%
+% twitter entity linking; S-MART http://www.anthology.aclweb.org/P/P15/P15-1049.pdf
+%
+%TODO \dots
 
 \subsection{Answers by Paraphrasing}
 
@@ -591,27 +593,10 @@ words, while ``What is the capital of Christians?'' may seek the
 paraphrase of \textit{capital of Christians}, aside of database lookups.
 
 \textbf{Learning to Understand Phrases by Embedding the Dictionary (DefGen)} \citep{DefGen}
-	--- reverse dictionary and QA on crossword puzzles using word2vec
+	is solving the tasks of reverse dictionary and QA on crossword puzzles
+	using word2vec
 	with composing via RNN or an averaging baseline, embeddings of
 	concepts are pre-trained from wikipedia intros and wordnet definitions.
-
-\subsection{Cloze-style Questions}
-
-In the Cloze procedure scenario \citep{Cloze},
-we consider a $(context, query)$ pair where the query
-sentence is entailed by the context, but a single entity name in the query
-is missing (e.g.\ in a context detailing an incident of the well-known personality
-\textit{Jeremy Clarkson}, we are to find $X$ for the query
-\textit{Producer X will not press charges against Jeremy Clarkson, his lawyer says.}).
-
-\textbf{Teaching Machines to Read and Comprehend} \citep{ReadAndComprehend}
-	--- an attention-based model that produces vector embeddings of $(document, query)$
-	pairs and uses a weight matrix to judge probability of a particular
-	word being the answer based on the composite pair embedding;
-	the paper is not clear on the particulars, unfortunately.
-	Three composite vector embedding models are considered,
-	based on bi-directional LSTM and convolution-ish architectures.
-
 
 
 
@@ -623,13 +608,11 @@ Full-scale end-to-end systems combining structured and unstructured approaches.
 
 \textbf{YodaQA: A Modular Question Answering System Pipeline} \citep{YodaQAPoster2015}
 
-\textbf{OpenQA} \citep{OpenQA} is a recently introduced end-to-end QA pipeline platform
-also developed independently during the course of our work, and shares our
-goal of a common research platform in the field.  However, the approach
-is very different, as OpenQA is more of a portfolio-style engine with
+\textbf{OpenQA} \citep{OpenQA} is conversely more of a portfolio-style engine with
 mostly independent pipelines which have their candidate answers combined,
-while YodaQA emphasizes modularity on the pipeline stage level,
-with e.g.\ all answer producers sharing a common answer analysis stage.
+rather than emphasizing modularity on the pipeline stage level
+(with e.g.\ all answer producers sharing a common answer analysis stage)
+as YodaQA does.
 
 
 
@@ -638,7 +621,38 @@ with e.g.\ all answer producers sharing a common answer analysis stage.
 \section{Non-Factoid QA}
 \label{sec:nonfactoid}
 
-TODO very short overview.  The MemNN task.  Text entailment.
+Some questions are not meant to be answered by factoids.
+One special case are yes/no questions --- but these can be
+transformed to similar queries as factoid questions if they have
+factoid content (e.g.\ whether person $X$ was born at place $Y$).
+
+However, in general the prevailing non-factoid scenario is that
+the system is given a text snippet and questions about the specific
+content of the text snippet.  Examples include entrance exams,%
+\footnote{\url{http://nlp.uned.es/entrance-exams/}}
+TERENCE child therapy snippets%
+\footnote{\url{http://datahub.io/dataset/terence-reading-comprehension-dataset}}
+or the Toy Tasks set \citep{ToyTasks}.%
+Instead of knowledge base retrieval, the system has to infer
+the answer from the text snippet.
+These tasks are typically solved by systems for Recognizing Textual Entailment%
+\footnote{\url{http://www.aclweb.org/aclwiki/index.php?title=Recognizing_Textual_Entailment}}
+or, lately, Memory Neural Networks \citep{MemNN}.
+
+As another example,
+in the Cloze procedure scenario \citep{Cloze},
+we consider a $(context, query)$ pair where the query
+sentence is entailed by the context, but a single entity name in the query
+is missing (e.g.\ in a context detailing an incident of the well-known personality
+\textit{Jeremy Clarkson}, we are to find $X$ for the query
+\textit{Producer X will not press charges against Jeremy Clarkson, his lawyer says.}).
+\textbf{Teaching Machines to Read and Comprehend} \citep{ReadAndComprehend}
+	is an attention-based model that produces vector embeddings of $(document, query)$
+	pairs and uses a weight matrix to judge probability of a particular
+	word being the answer based on the composite pair embedding;
+	the paper is not clear on the particulars, unfortunately.
+	Three composite vector embedding models are considered,
+	based on bi-directional LSTM and convolution-ish architectures.
 
 
 
