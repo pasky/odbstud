@@ -602,11 +602,16 @@ paraphrase of \textit{capital of Christians}, aside of database lookups.
 
 \section{Hybrid QA Systems}
 
-Full-scale end-to-end systems combining structured and unstructured approaches.
+Full-scale end-to-end systems combine structured and unstructured knowledge bases
+and combine a variety of approaches.
 
-\textbf{(DeepQA IBM Watson)} \citep{WatsonOverview}
-
+\textbf{DeepQA IBM Watson} \citep{WatsonOverview}
+uses a common pipeline for processing questions, in particular
+with common question analysis and answer analysis and scoring components,
+only using the different paradigms in answer production stage.
 \textbf{YodaQA: A Modular Question Answering System Pipeline} \citep{YodaQAPoster2015}
+which is also described in Ch.~\ref{ch:work} largely follows these ideas,
+reimplementing them within an open source framework from scratch.
 
 \textbf{OpenQA} \citep{OpenQA} is conversely more of a portfolio-style engine with
 mostly independent pipelines which have their candidate answers combined,
