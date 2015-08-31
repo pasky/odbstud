@@ -1,5 +1,5 @@
 % !TEX program = xelatex
-\documentclass[11pt,a4paper]{report}
+\documentclass[11pt,a4paper,notitlepage]{report}
 \usepackage{polyglossia}
 \usepackage{fontspec}
 \usepackage{subfig}
@@ -21,15 +21,25 @@
 
 \def\TODO{{\bf ??? }}
 
-\title{Systems and Approaches for Question Answering \\ DRAFT}
+\title{Systems and Approaches for Question Answering}
 \author{Mgr. Petr Baudiš}
 
 \begin{document}
 \maketitle
 
 \begin{abstract}%
-	We survey the field of factoid question answering and propose
-	lines of direction for further research in the area.
+	I define and explore the task of Factoid Question Answering.
+	This involves understanding a naturally phrased question
+	about some (often open domain) fact, looking this fact up
+	in a knowledge base (structured database or unstructured
+	text corpus), and scoring the candidate answers.
+	I survey the recent scientific work and directions in this
+	field, define some interesting sub-tasks and propose a new dataset.
+	I then present my own baseline QA pipeline YodaQA that
+	combines both structured and unstructured approaches.
+	Based on experiences with this baseline and survey of the
+	field, I propose some scientifically promising lines of further
+	QA research.
 \end{abstract}
 
 \tableofcontents
