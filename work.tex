@@ -106,7 +106,7 @@ see Appendix~\ref{app:analysis}.
 
 \begin{figure}[hb]
 \begin{center}
-\resizebox{15cm}{!}{\includegraphics{question-analysis.eps}}
+\resizebox{12cm}{!}{\includegraphics{question-analysis.eps}}
 %\vspace*{-0.75cm}
 \caption{The general organization of the Question Analysis.}
 \label{fig:arch-qa}
@@ -300,21 +300,22 @@ overfitting on the training set and we therefore ignore
 the successive refining stage in the benchmarked pipeline.
 
 
-\section{Performance Analysis}
+\section{Results}
 \label{sec:results}
 
-As we present performance analysis of our system,
+As we present evaluation of our system,
 we shall first detail our experimental setup;
 this also includes discussion of our question dataset.
 
 Then, we proceed with the actual results --- we measure the \textit{AP recall}
 of the system (recall of the Answer Production component --- whether a correct answer has been generated and considered,
-without regard to its score) and \textit{precision-at-one} (whether the
+without regard to its score) and \textit{precision@1} (whether the
 correct answer has been returned as the top answer by the system).
 We find this preferrable to typical information retrieval measures like MRR or MAP
 since in many applications, eventually only the single top answer output by the system
 matters; however, we also show the \textit{mean reciprocial rank}
 for each configuration and discuss the rank distribution of correct answers.
+These measures are further described in Ch.~\ref{ch:survey}.
 
 Aside of the performance of the default configuration, we also discuss
 scaling of the system (extending the alotted answer time) and performance
@@ -374,38 +375,30 @@ tied to Freebase, popular as a semantic parsing benchmark).
 
 \subsection{System Evaluation}
 
-TODO FIXME XXX
-
-TODO re-measure
-
-\begin{figure}[t]
+\begin{figure}[ht]
 % increase table row spacing, adjust to taste
 \renewcommand{\arraystretch}{1.3}
 \centering
-\begin{tabular}{|c|cccc|}
+\begin{tabular}{|c|ccc|}
 \hline
-Pipeline & AP Recall & Precision-at-one & MRR & time \\ \hline \hline
-default & 79.3\% & 32.6\% & 0.420 & 28.8s \\
+Pipeline & AP Recall & Prec@1 & MRR \\ \hline \hline
+default & 77.2\% & 31.4\% & 0.409 \\
 \hline
-full-text scaling ($6\to12$ fetched results) & 82.3\% & 34.0\% & 0.430 & 50.0s \\
-freebase scaling ($5\to10$ topics, $40\to80$ properties) & 79.8\% & 31.6\% & 0.416 & 29.8s \\
-naive web search integration (Bing-returned snippets) & & & & \\
+full-text scaling ($6\to12$ fetched results) & 80.0\% & 35.3\% & 0.440 \\
+enwiki KB hold-out & 42.1\% & 19.8\% & 0.253 \\
+structured KB hold-out & 70.7\% & 28.8\% & 0.378 \\
 \hline
-full-text hold-out & 49.5\% & 20.9\% & 0.277 & 5.8s \\
-structured hold-out & 73.5\% & 29.1\% & 0.376 & 23.8s \\
-\hline
-type coercion hold-out & 79.3\% & 22.1\% & 0.314 & 30.0s \\
-concept clues hold-out & 67.9\% & 23.0\% & 0.314 & 25.6s \\
-CRF hold-out & & & & \\
+answer typing hold-out & 77.2\% & 30.7\% & 0.394 \\
+concept clues hold-out & 68.1\% & 22.3\% & 0.318 \\
 \hline
 \end{tabular}
 \vspace*{-0.2cm}
 \caption{Benchmark results of various pipeline variants on the \textit{curated} test dataset.
-MRR is the Mean Reciprocal Rank $|Q|\cdot\sum_{q\in Q}{1/r_q}$, time is the average time spent answering one question.}
+MRR is the Mean Reciprocal Rank $|Q|\cdot\sum_{q\in Q}{1/r_q}$.}
 \label{fig:holdoutbench}
 \end{figure}
 
-\begin{figure}[t]
+\begin{figure}[ht]
 \begin{center}
 \resizebox{85mm}{!}{\includegraphics{ranks.eps}}
 \vspace*{-0.75cm}
@@ -414,14 +407,14 @@ MRR is the Mean Reciprocal Rank $|Q|\cdot\sum_{q\in Q}{1/r_q}$, time is the aver
 \end{center}
 \end{figure}%\vspace{5mm}
 
-Benchmark results over various pipeline configurations are laid out in Fig.~\ref{fig:holdoutbench}.
+Evaluation over various pipeline configurations are laid out in Fig.~\ref{fig:holdoutbench}.
 Aside of the general performance of the system,
 it is instructive to look at the histogram of answer ranks
 for the default pipeline, shown in Fig.~\ref{fig:ranks}.
-We can observe that while precision-at-one is TODO,
-precision-at-five%
+We can observe that while precision@1 is 31.4\%,
+precision@5%
 \footnote{Proportion of questions where the correct answer is ranked in top five.}
-is already at TODO of test questions.
+is already at 50\% of test questions.
 
 The information retrieval parameters of the default pipeline are selected so
 that answering a question takes about 10s on average on a single core of
@@ -433,65 +426,69 @@ By raising the limiting
 parameters, we can observe further AP recall increase and a solid precision improvement.
 Our system could therefore meaningfully make use of further computing resources.
 
-We also benchmarked performance with various components of the pipeline
+We also benchmarked accuracy with various components of the pipeline
 disabled.  We can see that the full-text and structured knowledge bases
 are complementary to a degree, but the full-text base is eventually
 a much stronger answer source for our system on the open domain factoid
-questions of the \texttt{curated} dataset.  Type coercion and detection
-of the concept clues in the question are both important heuristics for
-our QA system.
+questions of the \texttt{curated} dataset.  The ``answer typing'' hold-out
+represents suppression of external resources (Wordnet, DBpedia) when guessing
+answer types.  We can see that entity linking in the question
+is also an important heuristic for our QA system.
 
 \subsection{Comparison to Other Systems}
 
-In Fig.~\ref{fig:trecbench}, we compare various performance measures
-with the most relevant previously published systems
-on the TREC dataset, as reported in the respective papers,
-with ours benchmarked on non-curated version of the TREC 2002, 2003 dataset test split.
-
-\begin{figure}[t]
-%% increase table row spacing, adjust to taste
-%\renewcommand{\arraystretch}{1.3}
-\centering
-\begin{tabular}{|c|cccc|}
-\hline
-System & Precision-at-one & AP Recall & F1 & MRR \\ \hline
-LLCpass03 \citep{LCC} (hand-crafted system) & 68.5\% & & & \\
-AskMSR \citep{AskMSR} (web-search system) & 61.4\% & & & 0.507 \\ \hline
-OpenEphyra \citep{Ephyra2006} (hand-crafted OSS) & ``above 25\%'' & & & \\
-JacanaIR \citep{TreeEditIR2013Yao} (modern fully-learned OSS) & & & & 0.299$^*$ \\
-OQA \citep{OQA} (modern fully-learned OSS) & & & 29\%$^{**}$ & \\ \hline
-\textbf{YodaQA v1.1} &  &  &  &  \\
-\hline
-\end{tabular}
-\vspace*{-0.2cm}
-\caption{Benchmark results of some relevant systems on the unmodified TREC dataset.\quad
-$^*$ answer-bearing sentence retrieval\quad
-$^{**}$ sub-sampled dataset with manual evaluation}
-\label{fig:trecbench}
-\end{figure}
-
-In Fig.~\ref{fig:wqbench}, we compare ourselves with other published systems
-on the WebQuestions dataset (test split), as reported in their respective papers.
-
-\begin{figure}[t]
+\begin{figure}[ht]
 %% increase table row spacing, adjust to taste
 %\renewcommand{\arraystretch}{1.3}
 \centering
 \begin{tabular}{|c|ccc|}
 \hline
-System & Precision-at-one & F1 (Berant) & MRR \\ \hline
-\textsc{Sempre} (2013) & & & \\
-\textsc{Sempre} (2014) & & & \\
-\textsc{Paralex} (2014) & & & \\
-JacanaFB & & & \\
-OQA \citep{OQA} & & & \\ \hline
-\textbf{YodaQA v1.1} & & & \\
+System & Precision@1 & F1 & MRR \\ \hline
+LLCpass03 \citep{LCC} (hand-crafted system) & 68.5\% & --- & --- \\
+AskMSR \citep{AskMSR} (web-search system) & 61.4\% & --- & 0.507 \\ \hline
+OpenEphyra \citep{Ephyra2006} (hand-crafted OSS) & ``above 25\%'' & --- & --- \\
+JacanaIR \citep{TreeEditIR2013Yao} (modern fully-learned OSS) & --- & 23.1\%$^{*}$ & --- \\
+OQA \citep{OQA} (modern fully-learned OSS) & --- & 29\%$^{**}$ & --- \\ \hline
+\textbf{YodaQA v1.1} & 26.4\% & 26.4\% & 0.325 \\
 \hline
 \end{tabular}
 \vspace*{-0.2cm}
-\caption{Benchmark results of other published systems on the WebQuestions dataset.}
+\caption{Benchmark results of some relevant systems on the unmodified TREC dataset.\quad
+$^{*}$ MIT99 subset;
+$^{**}$ sub-sampled dataset with manual evaluation}
+\label{fig:trecbench}
+\end{figure}
+
+In Fig.~\ref{fig:trecbench}, we compare various performance measures
+with the most relevant previously published systems
+on the TREC dataset, as reported in the respective papers,
+with ours benchmarked on non-curated version of the TREC 2002, 2003 dataset test split.
+This comparison has numerous caveats, though, as explained within the table.
+Our system has AP recall 60.9\% on this dataset.
+
+\begin{figure}[ht]
+%% increase table row spacing, adjust to taste
+%\renewcommand{\arraystretch}{1.3}
+\centering
+\begin{tabular}{|c|cc|}
+\hline
+System & F1@1 & F1 (Berant) \\ \hline
+Sempre & 35.7\% & 35.7\% \\
+JacanaFB & 35.4\% & 33.0\% \\
+\textbf{YodaQA v1.1} & 34.3\% & --- \\
+\hline
+STAGG (state-of-art) & --- & 52.5\% \\
+\hline
+\end{tabular}
+\vspace*{-0.2cm}
+\caption{Benchmark results of som relevant systems on the WebQuestions dataset. See also Sec.~\ref{sec:structured}.}
 \label{fig:wqbench}
 \end{figure}
+
+In Fig.~\ref{fig:wqbench}, we compare ourselves with other published systems
+on the WebQuestions dataset (test split), as reported in their respective papers.
+We limit our system to use only structured KBs.
+Our system has AP recall 78.3\% and MRR 0.431 on this dataset.
 
 
 
