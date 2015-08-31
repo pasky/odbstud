@@ -122,22 +122,46 @@ to precision@1 and recall@1.)
 \centering
 \begin{tabular}{|c|ccc|cccc|}
 \hline
-System & F$_1$@1 & MRR  & F1 (Berant) & F1 (Yao) & MAP  \\ \hline
+System & F$_1$@1 & F1 (Berant) & F1 (Yao) \\ \hline
+\cite{OQA} &
+---              & ---         & (35.0\%) \\
 \cite{TreeFreebase2014Yao} &
-35.4\%           & ---  & 33.0\%      & 42.0\%   & ---  \\
+35.4\%           & 33.0\%      & 42.0\%   \\
+\cite{Semantic2014Bordes} &
+40.4\%           & 39.2\%      & 43.2\%   \\
 \cite{LeanFreebaseYao} &
----              & ---  & 44.3\%      & 53.5\%   & ---  \\
+---              & 44.3\%      & 53.5\%   \\
+\cite{Aqqu} &
+---              & 49.4\%      & ---      \\
 \hline
 \cite{Semantic2013Berant} &
-35.7\%           & ---  & 35.7\%      & ---      & ---  \\
+35.7\%           & 35.7\%      & ---      \\
+\cite{MTBao2014} &
+37.5\%           & 37.5\%      & ---      \\
+\cite{SPBerant2014Paraphrase} &
+39.9\%           & 39.9\%      & 43.0\%   \\
+\cite{STAGG} &
+---              & 52.5\%      & ---      \\
 \hline
 \end{tabular}
 \vspace*{-0.2cm}
-\caption{Benchmark results of structured KB systems on the WebQuestions dataset using Freebase.}
+\caption{Benchmark results of structured KB systems on the WebQuestions dataset using Freebase.
+Values in parenthesis have caveats like subsampling or manual evaluating.}
 \label{fig:structcompare}
 \end{figure}
 
 \subsection{Information Retrieval Approach}
+
+\textbf{Open Question Answering Over Curated and Extracted Knowledge Bases (OQA)} \citep{OQA}
+	is a complex multi-stage system:
+	the question is paraphrased (using mined operators),
+	parsed to a KB query (by manual templates),
+	the query rewritten (using mined operators again),
+	and executed (on an ensemble of KBs including Freebase).
+	On WebQuestions, F$_1$ (Yao --- probably) is reported at 35\%.
+	Results on TREC were also reported, with F$_1$ 29\%.
+	However, the answers were evaluated manually.
+	The implementation is open source.
 
 \textbf{Information Extraction over Structured Data: Question Answering with Freebase (Jacana Freebase)} \citep{TreeFreebase2014Yao}
 	produces a set of fixed dependency-parse based question features.
@@ -161,6 +185,28 @@ System & F$_1$@1 & MRR  & F1 (Berant) & F1 (Yao) & MAP  \\ \hline
 	Without the alignment model, the system has F$_1$ (Yao) 36.9\%.
 	The implementation is open source.
 
+\textbf{Question Answering with Subgraph Embeddings} \citep{Semantic2014Bordes}
+	considers the QA task as a problem of finding a vector embedding
+	of the question and candidate answers such that the score --- a scalar product
+	of these embeddings\footnote{That is, non-normalized cosine similarity of vectors.} ---
+	is highest for the correct answer.
+	Question embedding is produced by averaging word embeddings
+	(as in Sec.~\ref{sec:embeddings}; word embeddings are trained from scratch),
+	the embedding matrix was also trained to produce similar
+	vectors for question paraphrases (based on WikiAnswers).
+	Answers are embedded from high-dimensional binary encoding
+	of entities and relations in the subgraph surrounding the answer
+	and the path between the question and answer.
+	To generate candidate answers, the immediate neighborhood of the question
+	concept is explored, and in addition directional forrays are made based
+	on score of embeddings of particular relations.
+	Aside of WebQuestion training set, automatically produced 2 million
+	questions from ClueWeb were included for training.
+	WebQuestions+Freebase precision@1 is $40.4\%$ and
+	full-result F$_1$ (Berant) is $39.2\%$ and F$_1$ (Yao) $43.2\%$.
+	(In ensemble with \cite{SPBerant2014Paraphrase},
+	$F_1$ is reported as $41.8\%$ (Berant) or $45.7\%$ (Yao).)
+
 \textbf{Lean Question Answering over Freebase from Scratch (kitt.ai)} \citep{LeanFreebaseYao}
 	is a simple approach that uses
 	fuzzy matching of all question bigrams to link entities to Freebase concepts,
@@ -169,6 +215,22 @@ System & F$_1$@1 & MRR  & F1 (Berant) & F1 (Yao) & MAP  \\ \hline
 	by a bag-of-unigrams-and-bigrams logistic regression.
 	On WebQuestions+Freebase, it scores F$_1$ (Berant) 44.3\%, F$_1$ (Yao) 53.5\%.
 	On the training set, this approach had AP recall of $62\%$.
+
+\textbf{More Accurate Question Answering on Freebase} \citep{Aqqu}
+	is an end-to-end system that first aggressively
+	links many potential question entities to Freebase concepts,
+	then generates answer candidates by matching three pre-defined
+	templates in the knowledge (including one that uses entity pairs).
+	Answers are filtered based on trivial type checking,
+	and scored based on Freebase relation(s) alignment with
+	the question --- number of overlaping words, derived words,
+	word vector embedding cosine similarities and indicator
+	words in question trained by distant supervision
+	(Wikipedia sentences that contain two entities connected
+	with such relation in Freebase would often have the indicator
+	word on the path between the entities in dependency parse).
+	The answers are ranked using pairwise random forest ranker.
+	On WebQuestions+Freebsae, it scores F$_1$ (Berant) 49.4\%.
 
 \subsection{Semantic Parsing Approach}
 
@@ -191,10 +253,19 @@ and parsers using different datasets like WikiAnswers \cite{Fader2013Paraphrase}
 	based on neighboring predicates.
 	The baseline WebQuestions+Freebase accuracy is $35.7\%$
 	(as revised in \cite{FreebaseQA2014Yao};
-	this number is equivalent to answer precision, recall and F$_1$
+	this number is equivalent to answer precision, recall and F$_1$ (Berant)
 	as well as these metrics @1
 	for this system as it generates a single answer (or answer list)
 	hypothesis for each question).
+	The implementation is open source.
+
+\textbf{Knowledge-Based Question Answering as Machine Translation \citep{MTBao2014}}
+	considers converting a question to an answer as a machine translation
+	problem, with the formal query as Meaning Representation
+	and various partial derivations of the question converted
+	and composed to these representations.
+	We do not include details since accuracy is only 37.5\%
+	and involves training on several thousand hand-labelled questions.
 
 %\textbf{Paraphrase-Driven Learning for Open Question Answering (Paralex)} \citep{Fader2013Paraphrase}
 %	also builds a lexicon that maps question word templates to queries,
@@ -220,27 +291,34 @@ and parsers using different datasets like WikiAnswers \cite{Fader2013Paraphrase}
 	From the input question, a number of possible logical forms
 	are generated and then scored by a paraphrase-based model,
 	using features based on word associations and features
-	based on averaged word vector embeddings (as in Sec.~\ref{sec:embeddings})
+	based on averaged word vector embeddings
 	with a generative model for embeddings alignment (similar
-	to \citep{Yu2014Deep} described in detail in Sec.~\ref{sec:anssentsel}).
+	to \cite{Yu2014Deep} described in detail in Sec.~\ref{sec:anssentsel}).
 	WebQuestions+Freebase accuracy is reported to be $39.9\%$.
-
-\textbf{Open Question Answering Over Curated and Extracted Knowledge Bases (OQA)} \citep{OQA}
-	--- paraphrase (mined operators) $\to$ parse (templates) $\to$ rewrite (mined operators) $\to$ execute (ensemble of KBs).
-	Novel machine learning for inference and answer scoring with hidden variables.
-	Datasets public, open source.
-	WebQuestions F1 35\%, TREC F1 29\%, WikiAnswers F1 8\%.
-
-\citep{Semantic2014Bordes}
-
-\citep{FreebaseQA2014Yao}
-
-\citep{MTBao2014}
-k
-
-\citep{Aqqu}
+	\cite{Semantic2014Borders} reports that F$_1$ (Yao) is $43.0\%$.
 
 \textbf{Semantic Parsing via Staged Query Graph Generation: Question Answering with Knowledge Base (STAGG)} \citep{STAGG}
+	produces the logical forms of questions in the form of subgraph templates
+	to be matched against the Freebase knowledge graph,
+	facilitating robust answering of even multiple-concept questions
+	(such as which actor plays character $X$ in $Y$);
+	the subgraph templates also include aggregation operators.
+	S-MART \cite{ELS-MART} is used for entity linking
+	that has similar recall as Freebase Search API, but twice the precision.
+	The \textit{core inferential chain} is built as a property path
+	between question topic and answer concept within Freebase,
+	and expanded to a subgraph query by iteratively adding extra
+	constraints based on matches of question content in the path
+	neighborhood (entity mentions or aggregation words).
+	Candidate query subgraphs are scored based on vector similarity
+	features; vector embeddings of the question and property paths
+	are produced by a max-pooled CNN (which is pre-trained to produce
+	similar vectors for ClueWeb sentence pairs containing entities that
+	are linked within Freebase).
+	The features are used for ranking candidate query subgraphs using lambda-rank.
+	On WebQuestions+Freebase, the system achieves answer list
+	precision $52.8\%$ and recall $46.6\%$, with F$_1$ (Berant)
+	$52.5\%$.
 
 
 
