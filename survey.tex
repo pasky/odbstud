@@ -4,7 +4,13 @@
 The research in Question Answering has been proceeding in several,
 largely independent, directions.  The main division is between QA
 on structured knowledge bases (typically graph databases like the
-semantic web)
+semantic web) and QA on unstructured text corpora (typically
+Wikipedia, ClueWeb, large amounts of news articles, or even
+a web search).
+
+Below, we survey the recent activity in these fields.
+For a historical viewpoint, we refer the reader to
+\cite{SurveyWang}, \cite{SurveyAllam} and \cite{SurveyLopeza}.
 
 
 \section{Structured Data QA}
@@ -74,7 +80,7 @@ owing to different strategies in the systems.
 In the simplest case, a single query is generated for every question
 and its result is matched with the gold standard
 \citep{Semantic2013Berant}, then we may measure just the \textit{accuracy}
-(i.e. proportion of correctly answered questions).
+(i.e.\ proportion of correctly answered questions).
 
 However, most systems generate a ranked list of candidate answers.
 IR list measures are sometimes used \citep{Fader2013Paraphrase,Semantic2014Bordes}:
@@ -327,8 +333,7 @@ and parsers using different datasets like WikiAnswers \cite{Fader2013Paraphrase}
 
 When dealing with question answering on top of unstructured data,
 two research directions exist: aside of generating a crisp answer,
-\textit{Answer Sentence Selection} is a popular sub-task%
-\footnote{\url{http://aclweb.org/aclwiki/index.php?title=Question_Answering_\%28State_of_the_art\%29}}
+\textit{Answer Sentence Selection} is a popular sub-task
 where instead of the answer, just an appropriate answer-bearing passage
 is to be returned to the user.
 
@@ -387,11 +392,36 @@ we also use this measure, but prefer the term \textit{answer production (AP) rec
 \subsection{Answer Sentence Selection}
 \label{sec:anssentsel}
 
-Binary classification or ranking problem.
-TODO TREC-based dataset by Wang et al.
-MAP and MRR reported.
+The task of answer sentence selection aims, given a set of passages,
+to identify those that answer the question --- i.e.\ bear the answer, but
+ideally also in the proper context.
+This may be regarded as a binary classification or ranking problem,
+and the IR measures MRR (when we just want to position such a sentence
+as high as possible) and MAP (when we seek to identify all answer bearing
+sentences) are appropriate.
+A reference dataset based on the TREC questions has been established
+by \cite{WangQAGrammar}.
+% TODO: our finding that the test split is bad
 
-\textbf{(Jacana)} \citep{TreeEdit2013Yao}
+In our work, we prefer to focus on returning crisp answers.
+Even in such a system, a component performing answer sentence ranking
+is useful as part of the IR chain and feature provider,
+nevertheless we do not go into much detail in this survey,
+and instead refer the reader to
+\url{http://aclweb.org/aclwiki/index.php?title=Question_Answering_\%28State_of_the_art\%29}
+	which contains an overview of various approaches.
+	We just pick two example systems below, the second
+	one being state-of-art.
+
+% TODO list the rest, of course...
+% TODO: http://arxiv.org/pdf/1507.02628v1.pdf ?!
+
+\textbf{Answer Extraction as Sequence Tagging with Tree Edit Distance (Jacana)} \citep{TreeEdit2013Yao}
+	uses logistic regression for binary classification of
+	relevant sentences.  The core features are determined
+	by aligning parse trees of the question and each candidate
+	sentence and building a tree edit script.
+	TREC MAP 0.631, MRR 0.748.
 
 \textbf{Deep Learning for Answer Sentence Selection} \citep{Yu2014Deep}
 	estimates, given vector embeddings $\mathbf{q}, \mathbf{a}$,
@@ -400,7 +430,7 @@ MAP and MRR reported.
 	generates a likely question embedding using $\mathbf{M}\, \mathbf{a}$
 	and then using dot-product measures its distance to the posed question.
 	Cross entropy over all QA pairs is used as the loss function for training.
-	Off-the-shelf $d=50$ distributed representations by Collobert and Weston 2008
+	Off-the-shelf $d=50$ distributed representations %by Collobert and Weston 2008
 	are used as word embeddings.
 	To generate compositional embeddings,
 	a simple unigram model that averages the embeddings is the baseline;
@@ -410,9 +440,15 @@ MAP and MRR reported.
 	feature is also used; the learnt method gives $\Delta 0.125$ against this baseline.
 	TREC MAP 0.7113, MRR 0.7846.
 
+
 \subsection{Precise Answer Production}
 
-TREC benchmark.  Curated TREC.  WebQuestions also possible(?).
+In the era when the classic TREC QA track was active,
+systems with large amount of handcraft \cite{LCC}
+%\cite{harabagiu2003open}
+or wrapping a web search engine \cite{AskMSR} dominated
+(making results difficult or laborious to reproduce,
+and with sometimes limited scientific value).
 
 \textbf{(DeepQA IBM Watson)} \citep{WatsonOverview}
 
@@ -446,11 +482,40 @@ and puts emphasis on querying web search engines.
 The \textbf{OAQA} initiative \citep{OAQATowards} has developed a basic QA framework,
 but does not provide an end-to-end pipeline and its usage of UIMA has
 in our opinion severe design limitations (see below).
-The \textbf{WatsonSim} system \citep{WatsonSim} has begun developing independently
-during the course of our own work and it works on Jeopardy! statements rather
-than questions.
 
-\textbf{MemNets} though I still think it's a toy task in QA context.
+
+\subsubsection{Non-TREC QA}
+
+Of course, question answering may diverge from the standard TREC
+setting of brief answers to short English language questions.
+There are no well-established datasets, so we do not survey this
+in detail, but we still mention at least two examples.
+
+Jeopardy! statements are short declarative sentences that substitute
+the entity in question with its type.
+The task of identifying the entities has gained fame as tackled
+by the \textbf{IBM Watson DeepQA} \citep{WatsonOverview, WatsonIntro}.
+It uses a pipeline architecture leveraging a wide array of strategies
+(including information extraction to build some structured KBs \citep{WatsonRelEx})
+and large manual rulesets.
+However, it also pioneered important conceptual improvements:
+\begin{itemize}
+	\item Specific structure and titling of Wikipedia articles is leveraged as high quality data source. \citep{WatsonIR}
+	\item Aside of having a fixed taxonomy for question/answer types, these are described by Lexical Answer Types (LATs) as arbitrary English words and flexible Type Coercion methods determine answer compatibility. \citep{WatsonTyCor}
+	\item The answers are evaluated in multiple successively focused phases with additional expensive evidence gathered only for top answers. \citep{WatsonScoring}
+\end{itemize}
+Another QA system on Jeopardy! questions is \textbf{WatsonSim} \citep{WatsonSim}
+(open source).
+
+Another QA-like task is the Quiz Bowl problem, where a sequence
+of declarative sentences describe some entity, starting from
+obscure facts and progressing to more obvious identifications.
+\textbf{QANTA} \citep{QANTA} pioneered usage of TreeRNN-based compound
+vector embedding models to align vector embeddings of the entities
+and the sentences describing them.
+
+
+
 
 \section{Auxiliary Tasks in QA}
 
